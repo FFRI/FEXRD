@@ -19,7 +19,7 @@ $ git clone https://github.com/FFRI/FEXRD.git
 $ cd FEXRD
 # Install patched version of LIEF for Python 3.6 (We also provide whl files for Python 3.7 and 3.8 in the same directory)
 $ pip install packages/lief-0.11.0.ffridataset2020-cp36-none-linux_x86_64.whl
-$ pip install https://github.com/FFRI/FEXRD/archive/fexrd-0.1.0-py3-none-any.whl
+$ pip install https://github.com/FFRI/FEXRD/releases/download/v2020.1/fexrd-0.1.0-py3-none-any.whl
 ```
 
 Alternatively, you can build from source code as follows.
