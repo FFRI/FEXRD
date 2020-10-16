@@ -1,0 +1,104 @@
+{
+  "lief": {
+    "sections": [
+      {
+        "characteristics": [
+          "CNT_CODE",
+          "MEM_EXECUTE",
+          "MEM_READ"
+        ],
+        "entropy": 6.037463609953142,
+        "name": ".text",
+        "numberof_line_numbers": 0,
+        "numberof_relocations": 0,
+        "pointerto_line_numbers": 0,
+        "pointerto_relocation": 0,
+        "types": [
+          "UNKNOWN"
+        ]
+      },
+      {
+        "characteristics": [
+          "CNT_INITIALIZED_DATA",
+          "MEM_READ"
+        ],
+        "entropy": 4.518213576161601,
+        "name": ".rdata",
+        "numberof_line_numbers": 0,
+        "numberof_relocations": 0,
+        "pointerto_line_numbers": 0,
+        "pointerto_relocation": 0,
+        "types": [
+          "IDATA",
+          "DEBUG",
+          "Out of range",
+          "UNKNOWN"
+        ]
+      },
+      {
+        "characteristics": [
+          "CNT_INITIALIZED_DATA",
+          "MEM_READ",
+          "MEM_WRITE"
+        ],
+        "entropy": 0.4646630272644706,
+        "name": ".data",
+        "numberof_line_numbers": 0,
+        "numberof_relocations": 0,
+        "pointerto_line_numbers": 0,
+        "pointerto_relocation": 0,
+        "types": [
+          "UNKNOWN"
+        ]
+      },
+      {
+        "characteristics": [
+          "CNT_INITIALIZED_DATA",
+          "MEM_READ"
+        ],
+        "entropy": 3.7062403545634366,
+        "name": ".pdata",
+        "numberof_line_numbers": 0,
+        "numberof_relocations": 0,
+        "pointerto_line_numbers": 0,
+        "pointerto_relocation": 0,
+        "types": [
+          "UNKNOWN"
+        ]
+      },
+      {
+        "characteristics": [
+          "CNT_INITIALIZED_DATA",
+          "MEM_READ"
+        ],
+        "entropy": 4.855375494112111,
+        "name": ".rsrc",
+        "numberof_line_numbers": 0,
+        "numberof_relocations": 0,
+        "pointerto_line_numbers": 0,
+        "pointerto_relocation": 0,
+        "types": [
+          "RESOURCE",
+          "UNKNOWN"
+        ]
+      },
+      {
+        "characteristics": [
+          "CNT_INITIALIZED_DATA",
+          "MEM_DISCARDABLE",
+          "MEM_READ"
+        ],
+        "entropy": 3.485228136034251,
+        "name": ".reloc",
+        "numberof_line_numbers": 0,
+        "numberof_relocations": 0,
+        "pointerto_line_numbers": 0,
+        "pointerto_relocation": 0,
+        "types": [
+          "RELOCATION",
+          "UNKNOWN"
+        ]
+      }
+    ]
+  }
+}

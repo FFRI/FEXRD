@@ -1,0 +1,20 @@
+{
+  "lief": {
+    "export": {
+      "entries": [
+        {
+          "address": 4096,
+          "is_extern": false,
+          "name": "export",
+          "ordinal": 0
+        }
+      ],
+      "export_flags": 0,
+      "major_version": 0,
+      "minor_version": 0,
+      "name": "dllnomain.dll",
+      "ordinal_base": 0,
+      "timestamp": 0
+    }
+  }
+}

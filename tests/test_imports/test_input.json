@@ -1,0 +1,48 @@
+{
+  "lief": {
+    "imports": [
+      {
+        "entries": [
+          {
+            "data": 4304,
+            "hint": 0,
+            "iat_address": 4336,
+            "name": "ExitProcess"
+          },
+          {
+            "data": 4318,
+            "hint": 0,
+            "iat_address": 4344,
+            "name": "printf"
+          },
+          {
+            "data": 4318,
+            "hint": 0,
+            "iat_address": 4352,
+            "name": "printf"
+          }
+        ],
+        "forwarder_chain": 0,
+        "import_address_table_rva": 4336,
+        "import_lookup_table_rva": 4256,
+        "name": "kernel32.dll",
+        "timedatestamp": 0
+      },
+      {
+        "entries": [
+          {
+            "data": 4318,
+            "hint": 0,
+            "iat_address": 4344,
+            "name": "printf"
+          }
+        ],
+        "forwarder_chain": 0,
+        "import_address_table_rva": 4344,
+        "import_lookup_table_rva": 4272,
+        "name": "msvcrt.dll",
+        "timedatestamp": 0
+      }
+    ]
+  }
+}

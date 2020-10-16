@@ -1,0 +1,69 @@
+{
+  "lief": {
+    "relocations": [
+      {
+        "block_size": 20,
+        "entries": [
+          {
+            "data": 12529,
+            "position": 241,
+            "type": "HIGHLOW"
+          },
+          {
+            "data": 12535,
+            "position": 247,
+            "type": "HIGHLOW"
+          },
+          {
+            "data": 12543,
+            "position": 255,
+            "type": "HIGHLOW"
+          },
+          {
+            "data": 12579,
+            "position": 291,
+            "type": "HIGHLOW"
+          },
+          {
+            "data": 12586,
+            "position": 298,
+            "type": "HIGHLOW"
+          },
+          {
+            "data": 12597,
+            "position": 309,
+            "type": "HIGHLOW"
+          }
+        ],
+        "virtual_address": 4096
+      },
+      {
+        "block_size": 12,
+        "entries": [
+          {
+            "data": 16425,
+            "position": 41,
+            "type": "HIGHADJ"
+          },
+          {
+            "data": 65535,
+            "position": 4095,
+            "type": "Out of range"
+          }
+        ],
+        "virtual_address": 4096
+      },
+      {
+        "block_size": 10,
+        "entries": [
+          {
+            "data": 40192,
+            "position": 3328,
+            "type": "MIPS_JMPADDR16 | IA64_DIR64"
+          }
+        ],
+        "virtual_address": 4096
+      }
+    ]
+  }
+}

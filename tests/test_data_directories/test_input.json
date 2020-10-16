@@ -1,0 +1,83 @@
+{
+  "lief": {
+    "data_directories": [
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "EXPORT_TABLE"
+      },
+      {
+        "RVA": 4240,
+        "section": "",
+        "size": 0,
+        "type": "IMPORT_TABLE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "RESOURCE_TABLE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "EXCEPTION_TABLE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "CERTIFICATE_TABLE"
+      },
+      {
+        "RVA": 4416,
+        "section": "",
+        "size": 14,
+        "type": "BASE_RELOCATION_TABLE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "DEBUG"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "ARCHITECTURE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "GLOBAL_PTR"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "TLS_TABLE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "LOAD_CONFIG_TABLE"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "BOUND_IMPORT"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "IAT"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "DELAY_IMPORT_DESCRIPTOR"
+      },
+      {
+        "RVA": 0,
+        "size": 0,
+        "type": "CLR_RUNTIME_HEADER"
+      }
+    ]
+  }
+}

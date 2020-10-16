@@ -1,0 +1,19 @@
+{
+  "lief": {
+    "header": {
+      "characteristics": 258,
+      "machine": "I386",
+      "numberof_sections": 1,
+      "numberof_symbols": 0,
+      "pointerto_symbol_table": 0,
+      "signature": [
+        80,
+        69,
+        0,
+        0
+      ],
+      "sizeof_optional_header": 224,
+      "time_date_stamp": 0
+    }
+  }
+}

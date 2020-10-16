@@ -1,0 +1,96 @@
+{
+  "dll_names": [
+    "kernel32.dll",
+    "msvcrt.dll"
+  ],
+  "api_names": [
+    "kernel32.dll:ExitProcess",
+    "kernel32.dll:printf",
+    "kernel32.dll:printf",
+    "msvcrt.dll:printf"
+  ],
+  "forwarder_chain": [
+    [
+      "kernel32.dll",
+      0
+    ],
+    [
+      "msvcrt.dll",
+      0
+    ]
+  ],
+  "timedatestamp": [
+    [
+      "kernel32.dll",
+      0
+    ],
+    [
+      "msvcrt.dll",
+      0
+    ]
+  ],
+  "import_address_table_rva": [
+    [
+      "kernel32.dll",
+      4336
+    ],
+    [
+      "msvcrt.dll",
+      4344
+    ]
+  ],
+  "iat_address": [
+    [
+      "kernel32.dll:ExitProcess",
+      4336
+    ],
+    [
+      "kernel32.dll:printf",
+      4344
+    ],
+    [
+      "kernel32.dll:printf",
+      4352
+    ],
+    [
+      "msvcrt.dll:printf",
+      4344
+    ]
+  ],
+  "data": [
+    [
+      "kernel32.dll:ExitProcess",
+      4304
+    ],
+    [
+      "kernel32.dll:printf",
+      4318
+    ],
+    [
+      "kernel32.dll:printf",
+      4318
+    ],
+    [
+      "msvcrt.dll:printf",
+      4318
+    ]
+  ],
+  "hint": [
+    [
+      "kernel32.dll:ExitProcess",
+      0
+    ],
+    [
+      "kernel32.dll:printf",
+      0
+    ],
+    [
+      "kernel32.dll:printf",
+      0
+    ],
+    [
+      "msvcrt.dll:printf",
+      0
+    ]
+  ]
+}

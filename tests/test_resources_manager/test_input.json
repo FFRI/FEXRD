@@ -1,0 +1,62 @@
+{
+  "lief": {
+    "resources_manager": {
+      "icons": [
+        {
+          "bit_count": 0,
+          "color_count": 0,
+          "height": 0,
+          "id": 1576,
+          "lang": "NEUTRAL",
+          "pixels": 18446744073423161000,
+          "planes": 0,
+          "reserved": 0,
+          "sublang": "DEFAULT",
+          "width": 0
+        }
+      ],
+      "manifest": "<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'/>",
+      "version": {
+        "fixed_file_info": {
+          "file_date_LS": 0,
+          "file_date_MS": 0,
+          "file_flags": 0,
+          "file_flags_mask": 0,
+          "file_os": "UNKNOWN",
+          "file_subtype": "UNKNOWN",
+          "file_type": "UNKNOWN",
+          "file_version_LS": 1,
+          "file_version_MS": 8388608,
+          "product_version_LS": 0,
+          "product_version_MS": 0,
+          "signature": 4277077181,
+          "struct_version": 0
+        },
+        "key": "VS_VERSION_INFO",
+        "string_file_info": {
+          "key": "StringFileInfo",
+          "langcode_items": [
+            {
+              "items": {
+                "FileDescription": "a \"standard\" PE",
+                "FileVersion": "required for Tab display under XP",
+                "LegalCopyright": "corkami.com"
+              },
+              "key": "00000000",
+              "type": 0
+            }
+          ],
+          "type": 0
+        },
+        "type": 0,
+        "var_file_info": {
+          "key": "VarFileInfo",
+          "translations": [
+            0
+          ],
+          "type": 0
+        }
+      }
+    }
+  }
+}

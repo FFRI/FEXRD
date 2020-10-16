@@ -1,0 +1,9 @@
+*.exe
+*.dll
+.idea
+.venv
+__pycache__
+.mypy_cache
+*.egg-info
+dist
+docs

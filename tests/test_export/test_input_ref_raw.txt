@@ -1,0 +1,26 @@
+{
+  "export_flags": 0,
+  "timestamp": 0,
+  "major_version": 0,
+  "minor_version": 0,
+  "ordinal_base": 0,
+  "name": "dllnomain.dll",
+  "entries_ordinal": [
+    [
+      "dllnomain.dll:export",
+      0
+    ]
+  ],
+  "entries_address": [
+    [
+      "dllnomain.dll:export",
+      4096
+    ]
+  ],
+  "entries_is_extern": [
+    [
+      "dllnomain.dll:export",
+      false
+    ]
+  ]
+}

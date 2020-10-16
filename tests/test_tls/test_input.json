@@ -1,0 +1,19 @@
+{
+  "lief": {
+    "tls": {
+      "addressof_callbacks": 4198788,
+      "addressof_index": 4198784,
+      "addressof_raw_data": [
+        0,
+        0
+      ],
+      "callbacks": [
+        4198400
+      ],
+      "characteristics": 0,
+      "data_directory": "TLS_TABLE",
+      "section": "",
+      "sizeof_zero_fill": 0
+    }
+  }
+}

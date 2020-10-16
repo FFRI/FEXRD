@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "fexrd"
+version = "0.1.0"
+description = "Feature EXtractor for FFRI Dataset"
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/FFRI/FEXRD"
+repository = "https://github.com/FFRI/FEXRD"
+authors = ["Koh M. Nakagawa <ko.nakagawa@ffri.jp>"]
+include = ["LICENSE"]
+keywords = ["Malware", "FFRI Dataset", "Machine Learning"]
+
+[tool.poetry.dependencies]
+python = ">=3.6.8"
+lief = {git = "https://github.com/kohnakagawa/LIEF.git", branch = "dev/ffri-dataset" }
+pandas = "^1.0.4"
+scikit-learn = "^0.23.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+mypy = "^0.770"
+flake8 = "^3.7.9"
+isort = "^4.3.21"
+black = "^19.10b0"
+pytest-datadir = "^1.3.1"
+flake8-black = "^0.2.1"
+flake8-isort = "^4.0.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.black]
+line-length = 80

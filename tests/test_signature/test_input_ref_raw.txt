@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "content_info_content_type": "1.3.6.1.4.1.311.2.1.4",
+  "content_info_digest_algorithm": "1.3.14.3.2.26",
+  "content_info_type": "1.3.6.1.4.1.311.2.1.15",
+  "signer_info_version": 1,
+  "signer_info_digest_algorithm": "1.3.14.3.2.26",
+  "signer_info_signature_algorithm": "1.2.840.113549.1.1.1",
+  "signer_info_authenticated_attributes_content_type": "1.3.6.1.4.1.311.2.1.4",
+  "signer_info_authenticated_attributes_program_name": "",
+  "signer_info_authenticated_attributes_url": "",
+  "signer_info_authenticated_attributes_message_digest": [
+    238,
+    177,
+    176,
+    117,
+    250,
+    176,
+    146,
+    75,
+    11,
+    23,
+    130,
+    227,
+    198,
+    52,
+    52,
+    162,
+    153,
+    69,
+    136,
+    219
+  ],
+  "signer_info_issuer": "C=AU, ST=Some-State, O=Internet Widgits Pty Ltd",
+  "certificates": [
+    {
+      "issuer": "C=AU, ST=Some-State, O=Internet Widgits Pty Ltd",
+      "serial_number": [
+        1
+      ],
+      "signature_algorithm": "1.2.840.113549.1.1.5",
+      "subject": "C=AU, ST=Some-State, O=Internet Widgits Pty Ltd, OU=code signing",
+      "valid_from": [
+        2011,
+        2,
+        7,
+        9,
+        10,
+        26
+      ],
+      "valid_to": [
+        2013,
+        2,
+        6,
+        9,
+        10,
+        26
+      ],
+      "version": 1
+    }
+  ]
+}

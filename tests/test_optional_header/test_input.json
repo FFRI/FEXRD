@@ -1,0 +1,36 @@
+{
+  "lief": {
+    "optional_header": {
+      "addressof_entrypoint": 4096,
+      "baseof_code": 0,
+      "baseof_data": 0,
+      "checksum": 0,
+      "dll_characteristics": 0,
+      "file_alignment": 512,
+      "imagebase": 4194304,
+      "loader_flags": 0,
+      "magic": "PE32",
+      "major_image_version": 0,
+      "major_linker_version": 0,
+      "major_operating_system_version": 0,
+      "major_subsystem_version": 4,
+      "minor_image_version": 0,
+      "minor_linker_version": 0,
+      "minor_operating_system_version": 0,
+      "minor_subsystem_version": 0,
+      "numberof_rva_and_size": 16,
+      "section_alignment": 4096,
+      "sizeof_code": 0,
+      "sizeof_headers": 272,
+      "sizeof_heap_commit": 0,
+      "sizeof_heap_reserve": 0,
+      "sizeof_image": 8192,
+      "sizeof_initialized_data": 0,
+      "sizeof_stack_commit": 0,
+      "sizeof_stack_reserve": 0,
+      "sizeof_uninitialized_data": 0,
+      "subsystem": "WINDOWS_CUI",
+      "win32_version_value": 0
+    }
+  }
+}

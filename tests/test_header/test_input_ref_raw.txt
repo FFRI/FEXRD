@@ -1,0 +1,39 @@
+{
+  "signature": [
+    80,
+    69,
+    0,
+    0
+  ],
+  "machine": {
+    "INVALID": 0,
+    "UNKNOWN": 0,
+    "AMD64": 0,
+    "ARM": 0,
+    "ARM64": 0,
+    "I386": 1,
+    "OTHER": 0
+  },
+  "numberof_sections": 1,
+  "time_date_stamp": 0,
+  "numberof_symbols": 0,
+  "pointerto_symbol_table": 0,
+  "sizeof_optional_header": 224,
+  "characteristics": {
+    "RELOCS_STRIPPED": 0,
+    "EXECUTABLE_IMAGE": 1,
+    "LINE_NUMS_STRIPPED": 0,
+    "LOCAL_SYMS_STRIPPED": 0,
+    "AGGRESSIVE_WS_TRIM": 0,
+    "LARGE_ADDRESS_AWARE": 0,
+    "BYTES_REVERSED_LO": 0,
+    "CHARA_32BIT_MACHINE": 1,
+    "DEBUG_STRIPPED": 0,
+    "REMOVABLE_RUN_FROM_SWAP": 0,
+    "NET_RUN_FROM_SWAP": 0,
+    "SYSTEM": 0,
+    "DLL": 0,
+    "UP_SYSTEM_ONLY": 0,
+    "BYTES_REVERSED_HI": 0
+  }
+}

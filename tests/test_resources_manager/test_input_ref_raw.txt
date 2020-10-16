@@ -1,0 +1,73 @@
+{
+  "manifest": "<assembly xmlns='urn:schemas-microsoft-com:asm.v1' manifestVersion='1.0'/>",
+  "version_type": 0,
+  "version_key": 1,
+  "version_fixed_file_info_signature": 4277077181,
+  "version_fixed_file_info_struct_version": 0,
+  "version_fixed_file_info_file_version_MS": 8388608,
+  "version_fixed_file_info_file_version_LS": 1,
+  "version_fixed_file_info_file_flags_mask": {
+    "DEBUG": 0,
+    "INFOINFERRED": 0,
+    "PATCHED": 0,
+    "PRERELEASE": 0,
+    "PRIVATEBUILD": 0,
+    "SPECIALBUILD": 0
+  },
+  "version_fixed_file_info_file_flags": {
+    "DEBUG": 0,
+    "INFOINFERRED": 0,
+    "PATCHED": 0,
+    "PRERELEASE": 0,
+    "PRIVATEBUILD": 0,
+    "SPECIALBUILD": 0
+  },
+  "version_fixed_file_info_file_os": {
+    "DOS": 0,
+    "DOS_WINDOWS16": 0,
+    "DOS_WINDOWS32": 0,
+    "NT": 0,
+    "NT_WINDOWS32": 0,
+    "OS216": 0,
+    "OS216_PM16": 0,
+    "OS232": 0,
+    "OS232_PM32": 0,
+    "PM16": 0,
+    "PM32": 0,
+    "UNKNOWN": 1,
+    "WINDOWS16": 0,
+    "WINDOWS32": 0,
+    "Out of range": 0
+  },
+  "version_fixed_file_info_file_type": {
+    "APP": 0,
+    "DLL": 0,
+    "DRV": 0,
+    "FONT": 0,
+    "STATIC_LIB": 0,
+    "VXD": 0,
+    "UNKNOWN": 1,
+    "Out of range": 0
+  },
+  "version_fixed_file_info_file_subtype": {
+    "DRV_COMM": 0,
+    "DRV_DISPLAY": 0,
+    "DRV_INSTALLABLE": 0,
+    "DRV_KEYBOARD": 0,
+    "DRV_LANGUAGE": 0,
+    "DRV_MOUSE": 0,
+    "DRV_NETWORK": 0,
+    "DRV_PRINTER": 0,
+    "DRV_SOUND": 0,
+    "DRV_SYSTEM": 0,
+    "DRV_VERSIONED_PRINTER": 0,
+    "UNKNOWN": 1,
+    "Out of range": 0
+  },
+  "version_fixed_file_info_file_date_MS": 0,
+  "version_fixed_file_info_file_date_LS": 0,
+  "version_string_file_info_type": 0,
+  "version_string_file_info_key": 1,
+  "version_var_file_info_type": 0,
+  "version_var_file_info_key": 1
+}
