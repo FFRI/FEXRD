@@ -1,6 +1,6 @@
-"""
-Author of this code work, Koh M. Nakagawa. c FFRI Security, Inc. 2020
-"""
+#
+# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+#
 
 import sys
 

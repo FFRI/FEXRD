@@ -1,6 +1,6 @@
-"""
-Author of this code work, Koh M. Nakagawa. c FFRI Security, Inc. 2020
-"""
+#
+# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+#
 
 import csv
 import glob
@@ -27,7 +27,7 @@ def feature_extractor() -> FeatureExtractor:
 def test_get_features(
     feature_extractor: FeatureExtractor, test_json: str, datadir: Path
 ) -> None:
-    ref_data: str = str(datadir / f"{os.path.splitext(test_json)[0]}_ref_features.csv")
+    ref_data: str = str(datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv")
     with open(ref_data, "r") as fin:
         reader = csv.reader(fin)
         columns_ref: List[str] = next(reader)

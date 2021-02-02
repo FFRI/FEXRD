@@ -1,0 +1,9 @@
+{
+  "trid_entries": [
+    ["(.EXE)GenericWin/DOSExecutable(2002/3)", 0.395],
+    ["(.EXE)DOSExecutableGeneric(2000/1)", 0.395],
+    ["(.SCORE)MusicCraftScore(1007/6)", 0.199],
+    ["(.VXD)VXDDriver(29/21)", 0.005],
+    ["(.DBF)SybaseiAnywheredatabasefiles(19/3)", 0.003]
+  ]
+}

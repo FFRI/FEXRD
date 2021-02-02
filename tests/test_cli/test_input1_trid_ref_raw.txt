@@ -1,0 +1,24 @@
+{
+  "trid_entries": [
+    [
+      "(.EXE)Win32Executable(generic)(4508/7/1)",
+      0.47100000000000003
+    ],
+    [
+      "(.EXE)GenericWin/DOSExecutable(2002/3)",
+      0.209
+    ],
+    [
+      "(.EXE)DOSExecutableGeneric(2000/1)",
+      0.209
+    ],
+    [
+      "(.SCORE)MusicCraftScore(1007/6)",
+      0.105
+    ],
+    [
+      "(.VXD)VXDDriver(29/21)",
+      0.003
+    ]
+  ]
+}

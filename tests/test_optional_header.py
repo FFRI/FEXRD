@@ -1,7 +1,6 @@
-"""
-Author of this code work, Koh M. Nakagawa. c FFRI Security, Inc. 2020
-"""
-
+#
+# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+#
 import csv
 import glob
 import json
@@ -11,7 +10,6 @@ from typing import List
 
 import numpy as np
 import pytest
-
 from fexrd import OptionalHeaderFeatureExtractor
 
 target_test_json: List[str] = glob.glob(
@@ -31,7 +29,7 @@ def test_get_features(
     datadir: Path,
 ) -> None:
     ref_data: str = str(
-        datadir / f"{os.path.splitext(test_json)[0]}_ref_features.csv"
+        datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv"
     )
     with open(ref_data, "r") as fin:
         reader = csv.reader(fin)

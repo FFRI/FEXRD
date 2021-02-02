@@ -1,0 +1,37 @@
+{
+  "addressof_new_exeheader": 176,
+  "addressof_relocation_table": 64,
+  "checksum": 0,
+  "file_size_in_pages": 3,
+  "header_size_in_paragraphs": 4,
+  "initial_ip": 0,
+  "initial_relative_cs": 0,
+  "initial_relative_ss": 0,
+  "initial_sp": 184,
+  "magic": 23117,
+  "maximum_extra_paragraphs": 65535,
+  "minimum_extra_paragraphs": 0,
+  "numberof_relocation": 0,
+  "oem_id": 0,
+  "oem_info": 0,
+  "overlay_number": 0,
+  "reserved": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "reserved2": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "used_bytes_in_the_last_page": 144
+}

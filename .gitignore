@@ -6,4 +6,5 @@ __pycache__
 .mypy_cache
 *.egg-info
 dist
-docs
+*.pickle
+node_modules

@@ -1,0 +1,9 @@
+[
+  " * a PE using hardcoded imports calls",
+  "msvcrt.dll",
+  "printf",
+  "eH,0\t",
+  "[Jd(",
+  "u2Pe",
+  "qv2P"
+]

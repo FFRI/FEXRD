@@ -1,0 +1,5 @@
+example/data/non_packed.jsonl filter=lfs diff=lfs merge=lfs -text
+example/data/packed/aspack.jsonl filter=lfs diff=lfs merge=lfs -text
+example/data/packed/beroex.jsonl filter=lfs diff=lfs merge=lfs -text
+example/data/packed/fsg.jsonl filter=lfs diff=lfs merge=lfs -text
+example/data/packed/pecompact.jsonl filter=lfs diff=lfs merge=lfs -text
