@@ -1,14 +1,12 @@
-"""
-Author of this code work, Koh M. Nakagawa. c FFRI Security, Inc. 2020
-"""
-
+#
+# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+#
 import glob
 import json
 import os
 from typing import List
 
 import pytest
-
 from fexrd import LiefFeatureExtractor
 
 target_test_json: List[str] = glob.glob(

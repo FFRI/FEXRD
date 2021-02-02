@@ -1,0 +1,26 @@
+{
+  "PE": 1,
+  "DLL": 0,
+  "Packed": 0,
+  "Anti-Debug": {
+    "yes": 0,
+    "no": 1,
+    "no (yes)": 0
+  },
+  "GUI Program": {
+    "yes": 0,
+    "no": 1,
+    "no (yes)": 0
+  },
+  "Console Program": {
+    "yes": 1,
+    "no": 0,
+    "no (yes)": 0
+  },
+  "contains base64": 1,
+  "AntiDebug": [
+    "DebuggerCheck__GlobalFlags"
+  ],
+  "mutex": 0,
+  "PEiD": []
+}

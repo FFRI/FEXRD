@@ -1,0 +1,7 @@
+[
+  "https://example.com",
+  "http://example.com",
+  "HKEY_LOCAL_MACHINE\\Software\\Classes",
+  "HKEY_CURRENT_USER",
+  "C:\\Windows\\System32"
+]

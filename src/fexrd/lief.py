@@ -1,140 +1,23 @@
-"""
-Author of this code work, Koh M. Nakagawa. c FFRI Security, Inc. 2020
-"""
+#
+# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+#
 
-from collections import defaultdict
 from enum import Enum
-from typing import (
-    Any,
-    Callable,
-    DefaultDict,
-    Dict,
-    List,
-    Optional,
-    Sized,
-    Tuple,
-    Union,
-)
+from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import lief
 import numpy as np
-from sklearn.feature_extraction import FeatureHasher
+
+from .feature_extractor import FeatureExtractor
+from .utils import (
+    make_defaultdict_from_dict_elem,
+    make_onehot_dict_from_bitflag,
+    make_onehot_from_str_keys,
+    vectorize_selected_features,
+    vectorize_with_feature_hasher,
+)
 
 assert lief.__version__.startswith("0.11.0"), "Supported LIEF version is 0.11.0"
-
-
-def _make_defaultdict_from_dict_elem(
-    dict_: Union[dict, defaultdict], key: str
-) -> DefaultDict[str, Any]:
-    return (
-        defaultdict(lambda: None, dict_[key])
-        if key in dict_.keys() and dict_[key] is not None
-        else defaultdict(lambda: None)
-    )
-
-
-def _make_onehot_dict_from_str_keys(
-    keys: List[str], target_key: Optional[str]
-) -> Dict[str, int]:
-    encoded_data = {key: 0 for key in keys}
-    if target_key:
-        encoded_data[target_key] = 1
-    return encoded_data
-
-
-def _make_onehot_dict_from_bitflag(
-    keys: List[str], bitflag: Optional[int], flag_enum_class: Any
-) -> Dict[str, int]:
-    encoded_data = {key: 0 for key in keys}
-    if bitflag:
-        for k in encoded_data.keys():
-            if bitflag & int(getattr(flag_enum_class, k)) != 0:
-                encoded_data[k] = 1
-    return encoded_data
-
-
-def _vectorize_with_feature_hasher(
-    list_: Optional[List[Union[str, Tuple[str, int]]]], dim: int
-) -> np.ndarray:
-    if list_ is None or not list_:
-        return np.array([None for _ in range(dim)])
-
-    if isinstance(list_[0], str):
-        input_type = "string"
-    else:
-        input_type = "pair"
-    return (
-        FeatureHasher(dim, input_type=input_type)
-        .transform([list_])
-        .toarray()[0]
-    )
-
-
-def _make_vector_column_for_array(name: str, dim: int) -> List[str]:
-    return [f"{name}[{i}]" for i in range(dim)]
-
-
-def _make_vector_column_for_dict(name: str, dict_: dict) -> List[str]:
-    return [f"{name}.{k}" for k in dict_.keys()]
-
-
-def _stack_columns(
-    prefix: str, columns: List[Union[str, List[str]]]
-) -> List[str]:
-    result = list()
-    for c in columns:
-        if isinstance(c, str):
-            result.append(f"{prefix}_{c}")
-        else:
-            result += [f"{prefix}_{i}" for i in c]
-    return result
-
-
-def _vectorize_selected_features(
-    raw_features: dict,
-    features_selected: List[str],
-    post_process_funcs: Dict[str, Callable],
-    column_prefix: str,
-) -> Tuple[List[str], np.ndarray]:
-    vectors = [
-        raw_features[f]
-        if f not in post_process_funcs.keys()
-        else post_process_funcs[f](raw_features[f])
-        for f in features_selected
-    ]
-    columns = _stack_columns(
-        column_prefix,
-        [
-            f
-            if not isinstance(v, Sized)
-            else _make_vector_column_for_dict(f, raw_features[f])
-            if isinstance(raw_features[f], Dict)
-            else _make_vector_column_for_array(f, len(v))
-            for f, v in zip(features_selected, vectors)
-        ],
-    )
-    return columns, np.hstack(vectors).astype(np.float32)
-
-
-class FeatureExtractor:
-    feature_name: str = ""
-
-    def __init__(self) -> None:
-        pass
-
-    def extract_raw_features(self, raw_json: dict) -> dict:
-        return raw_json[self.feature_name]
-
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
-        features_selected = [k for k in raw_features.keys()]
-        return _vectorize_selected_features(
-            raw_features, features_selected, {}, self.feature_name
-        )
-
-    def get_features(self, raw_json: dict) -> Tuple[List[str], np.ndarray]:
-        return self.vectorize_features(self.extract_raw_features(raw_json))
 
 
 class DosHeaderFeatureExtractor(FeatureExtractor):
@@ -151,14 +34,17 @@ class RichHeaderFeatureExtractor(FeatureExtractor):
         super(FeatureExtractor, self).__init__()
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        rich_header = _make_defaultdict_from_dict_elem(
+        rich_header = make_defaultdict_from_dict_elem(
             raw_json, self.feature_name
         )
 
         if rich_header["entries"]:
             # list of (comp.id, count)
             entries: Optional[List[Tuple[str, int]]] = [
-                (f'{entry["id"]:04x}{entry["build_id"]:04x}', entry["count"],)
+                (
+                    f'{entry["id"]:04x}{entry["build_id"]:04x}',
+                    entry["count"],
+                )
                 for entry in rich_header["entries"]
             ]
         else:
@@ -174,9 +60,9 @@ class RichHeaderFeatureExtractor(FeatureExtractor):
     ) -> Tuple[List[str], np.ndarray]:
         features_selected = ["key", "entries"]
         post_process_funcs = {
-            "entries": lambda x: _vectorize_with_feature_hasher(x, 50),
+            "entries": lambda x: vectorize_with_feature_hasher(x, 50),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -209,7 +95,7 @@ class HeaderFeatureExtractor(FeatureExtractor):
 
     @staticmethod
     def characteristics_to_onehot(chracteristics: int) -> Dict[str, int]:
-        return _make_onehot_dict_from_bitflag(
+        return make_onehot_dict_from_bitflag(
             [
                 "RELOCS_STRIPPED",
                 "EXECUTABLE_IMAGE",
@@ -267,7 +153,7 @@ class HeaderFeatureExtractor(FeatureExtractor):
             "machine": lambda x: list(x.values()),
             "characteristics": lambda x: list(x.values()),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -298,7 +184,7 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
 
     @staticmethod
     def subsystem_to_onehot(subsystem: str) -> Dict[str, int]:
-        return _make_onehot_dict_from_str_keys(
+        return make_onehot_from_str_keys(
             [
                 "UNKNOWN",
                 "NATIVE",
@@ -330,7 +216,7 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
         return encoded_data
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        optional_header = _make_defaultdict_from_dict_elem(
+        optional_header = make_defaultdict_from_dict_elem(
             raw_json, self.feature_name
         )
         return {
@@ -418,7 +304,7 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
             "subsystem": lambda x: list(x.values()),
             "dll_characteristics": lambda x: list(x.values()),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -451,7 +337,7 @@ class DataDirectoriesFeatureExtractor(FeatureExtractor):
             else None
         )
         if data_directories:
-            section: Optional[List[str]] = [
+            section: Optional[List[Optional[str]]] = [
                 data_directory["section"]
                 if "section" in data_directory.keys()
                 else None
@@ -471,13 +357,13 @@ class DataDirectoriesFeatureExtractor(FeatureExtractor):
     ) -> Tuple[List[str], np.ndarray]:
         features_selected = ["RVA", "size", "section"]
         post_process_funcs = {
-            "RVA": lambda x: _vectorize_with_feature_hasher(x, 50),
-            "size": lambda x: _vectorize_with_feature_hasher(x, 50),
-            "section": lambda x: _vectorize_with_feature_hasher(
+            "RVA": lambda x: vectorize_with_feature_hasher(x, 50),
+            "size": lambda x: vectorize_with_feature_hasher(x, 50),
+            "section": lambda x: vectorize_with_feature_hasher(
                 list(filter(lambda y: y is not None, x)) if x else None, 20
             ),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -609,23 +495,23 @@ class SectionsFeatureExtractor(FeatureExtractor):
             "types",
         ]
         post_process_funcs = {
-            "pointerto_relocation": lambda x: _vectorize_with_feature_hasher(
+            "pointerto_relocation": lambda x: vectorize_with_feature_hasher(
                 x, 50
             ),
-            "pointerto_line_numbers": lambda x: _vectorize_with_feature_hasher(
+            "pointerto_line_numbers": lambda x: vectorize_with_feature_hasher(
                 x, 50
             ),
-            "numberof_relocations": lambda x: _vectorize_with_feature_hasher(
+            "numberof_relocations": lambda x: vectorize_with_feature_hasher(
                 x, 50
             ),
-            "numberof_line_numbers": lambda x: _vectorize_with_feature_hasher(
+            "numberof_line_numbers": lambda x: vectorize_with_feature_hasher(
                 x, 50
             ),
-            "entropy": lambda x: _vectorize_with_feature_hasher(x, 50),
+            "entropy": lambda x: vectorize_with_feature_hasher(x, 50),
             "characteristics": lambda x: list(x.values()),
             "types": lambda x: list(x.values()),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -696,7 +582,7 @@ class RelocationsFeatureExtractor(FeatureExtractor):
         post_process_funcs = {
             "flattened_entries": lambda x: self.count_relocation_types(x),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -722,7 +608,7 @@ class TlsFeatureExtractor(FeatureExtractor):
         else:
             characteristics_str = None
             has_extra_bits = 0
-        encoded_data = _make_onehot_dict_from_str_keys(
+        encoded_data = make_onehot_from_str_keys(
             [
                 "SECTION_CHARACTERISTICS.ALIGN_1BYTES",
                 "SECTION_CHARACTERISTICS.ALIGN_2BYTES",
@@ -749,7 +635,7 @@ class TlsFeatureExtractor(FeatureExtractor):
     def data_directory_to_onehot(
         data_directory: Optional[str],
     ) -> Dict[str, int]:
-        return _make_onehot_dict_from_str_keys(
+        return make_onehot_from_str_keys(
             [
                 "EXPORT_TABLE",
                 "IMPORT_TABLE",
@@ -771,7 +657,7 @@ class TlsFeatureExtractor(FeatureExtractor):
         )
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        tls = _make_defaultdict_from_dict_elem(raw_json, self.feature_name)
+        tls = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
         return {
             "callbacks": int(
                 bool(tls["callbacks"])
@@ -805,7 +691,7 @@ class TlsFeatureExtractor(FeatureExtractor):
             "characteristics": lambda x: list(x.values()),
             "data_directory": lambda x: list(x.values()),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -828,9 +714,12 @@ class ExportFeatureExtractor(FeatureExtractor):
         export_apis: List[str] = list()
         for entry in entries:
             if "forward_information" in entry.keys():
-                api_name = f'{entry["forward_information"]["library"]}:{entry["forward_information"]["function"]}'
+                api_name = "{}:{}".format(
+                    entry["forward_information"]["library"],
+                    entry["forward_information"]["function"],
+                )
             else:
-                api_name = f'{name}:{entry["name"]}'
+                api_name = "{}:{}".format(name, entry["name"])
             export_apis.append(api_name)
         return export_apis
 
@@ -865,7 +754,7 @@ class ExportFeatureExtractor(FeatureExtractor):
         }
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        export = _make_defaultdict_from_dict_elem(raw_json, self.feature_name)
+        export = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
         entries = export["entries"]
         export_apis = self.make_export_apis(entries, export["name"])
         return {
@@ -892,13 +781,11 @@ class ExportFeatureExtractor(FeatureExtractor):
             "entries_is_extern",
         ]
         post_process_funcs = {
-            "entries_ordinal": lambda x: _vectorize_with_feature_hasher(x, 50),
-            "entries_address": lambda x: _vectorize_with_feature_hasher(x, 50),
-            "entries_is_extern": lambda x: _vectorize_with_feature_hasher(
-                x, 50
-            ),
+            "entries_ordinal": lambda x: vectorize_with_feature_hasher(x, 50),
+            "entries_address": lambda x: vectorize_with_feature_hasher(x, 50),
+            "entries_is_extern": lambda x: vectorize_with_feature_hasher(x, 50),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             selected_features,
             post_process_funcs,
@@ -915,7 +802,8 @@ class DebugFeatureExtractor(FeatureExtractor):
     # TODO: vectorize debug feature
     # def extract_raw_features(self, raw_json: dict) -> dict:
     #     debug = _make_defaultdict_from_dict(raw_json, self.feature_name)
-    #     return {...}
+    #     raw_features = dict()
+    #     return raw_features
 
 
 class ImportsFeatureExtractor(FeatureExtractor):
@@ -1017,18 +905,18 @@ class ImportsFeatureExtractor(FeatureExtractor):
             "hint",
         ]
         post_process_funcs = {
-            "dll_names": lambda x: _vectorize_with_feature_hasher(x, 100),
-            "api_names": lambda x: _vectorize_with_feature_hasher(x, 500),
-            "forwarder_chain": lambda x: _vectorize_with_feature_hasher(x, 100),
-            "timedatestamp": lambda x: _vectorize_with_feature_hasher(x, 100),
-            "import_address_table_rva": lambda x: _vectorize_with_feature_hasher(
+            "dll_names": lambda x: vectorize_with_feature_hasher(x, 100),
+            "api_names": lambda x: vectorize_with_feature_hasher(x, 500),
+            "forwarder_chain": lambda x: vectorize_with_feature_hasher(x, 100),
+            "timedatestamp": lambda x: vectorize_with_feature_hasher(x, 100),
+            "import_address_table_rva": lambda x: vectorize_with_feature_hasher(
                 x, 100
             ),
-            "iat_address": lambda x: _vectorize_with_feature_hasher(x, 100),
-            "data": lambda x: _vectorize_with_feature_hasher(x, 100),
-            "hint": lambda x: _vectorize_with_feature_hasher(x, 100),
+            "iat_address": lambda x: vectorize_with_feature_hasher(x, 100),
+            "data": lambda x: vectorize_with_feature_hasher(x, 100),
+            "hint": lambda x: vectorize_with_feature_hasher(x, 100),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -1045,7 +933,7 @@ class ResourcesTreeFeatureExtractor(FeatureExtractor):
         super(FeatureExtractor, self).__init__()
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        resources_tree = _make_defaultdict_from_dict_elem(
+        resources_tree = make_defaultdict_from_dict_elem(
             raw_json, self.feature_name
         )
         return {
@@ -1073,7 +961,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
     def fixed_version_file_flags_to_onehot(
         file_flags: Optional[int],
     ) -> Dict[str, int]:
-        return _make_onehot_dict_from_bitflag(
+        return make_onehot_dict_from_bitflag(
             [
                 "DEBUG",
                 "INFOINFERRED",
@@ -1088,7 +976,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
 
     @staticmethod
     def fixed_version_os_to_onehot(version_os: Optional[str]) -> Dict[str, int]:
-        return _make_onehot_dict_from_str_keys(
+        return make_onehot_from_str_keys(
             [
                 "DOS",
                 "DOS_WINDOWS16",
@@ -1113,7 +1001,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
     def fixed_version_file_type_to_onehot(
         file_type: Optional[str],
     ) -> Dict[str, int]:
-        return _make_onehot_dict_from_str_keys(
+        return make_onehot_from_str_keys(
             [
                 "APP",
                 "DLL",
@@ -1131,7 +1019,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
     def fixed_version_file_subtype_to_onehot(
         file_subtype: Optional[str],
     ) -> Dict[str, int]:
-        return _make_onehot_dict_from_str_keys(
+        return make_onehot_from_str_keys(
             [
                 "DRV_COMM",
                 "DRV_DISPLAY",
@@ -1239,23 +1127,23 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
         pass
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        resources_manager = _make_defaultdict_from_dict_elem(
+        resources_manager = make_defaultdict_from_dict_elem(
             raw_json, self.feature_name
         )
-        version = _make_defaultdict_from_dict_elem(resources_manager, "version")
+        version = make_defaultdict_from_dict_elem(resources_manager, "version")
         return {
             # NOTE: extracted but not converted to feature vector
             # TODO: should parse manifest XML file
             "manifest": resources_manager["manifest"],
             **self.extract_raw_features_from_version(version),
             **self.extract_raw_features_from_fixed_file_info(
-                _make_defaultdict_from_dict_elem(version, "fixed_file_info")
+                make_defaultdict_from_dict_elem(version, "fixed_file_info")
             ),
             **self.extract_raw_features_from_string_file_info(
-                _make_defaultdict_from_dict_elem(version, "string_file_info")
+                make_defaultdict_from_dict_elem(version, "string_file_info")
             ),
             **self.extract_raw_features_from_var_file_info(
-                _make_defaultdict_from_dict_elem(version, "var_file_info")
+                make_defaultdict_from_dict_elem(version, "var_file_info")
             ),
             # **self.extract_raw_features_from_icons(
             #     _make_defaultdict_from_dict_elem(
@@ -1295,7 +1183,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             "version_fixed_file_info_file_type": lambda x: list(x.values()),
             "version_fixed_file_info_file_subtype": lambda x: list(x.values()),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -1353,21 +1241,19 @@ class SignatureFeatureExtractor(FeatureExtractor):
         }
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        signature = _make_defaultdict_from_dict_elem(
-            raw_json, self.feature_name
-        )
-        signer_info = _make_defaultdict_from_dict_elem(signature, "signer_info")
+        signature = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
+        signer_info = make_defaultdict_from_dict_elem(signature, "signer_info")
         return {
             "version": signature["version"],
             # NOTE: extracted but not converted to feature vector
             **self.extract_raw_features_from_content_info(
-                _make_defaultdict_from_dict_elem(signature, "content_info")
+                make_defaultdict_from_dict_elem(signature, "content_info")
             ),
             # NOTE: extracted but not converted to feature vector
             **self.extract_raw_features_from_signer_info(signer_info),
             # NOTE: extracted but not converted to feature vector
             **self.extract_raw_features_from_authenticated_attributres(
-                _make_defaultdict_from_dict_elem(
+                make_defaultdict_from_dict_elem(
                     signer_info, "authenticated_attributes"
                 )
             ),
@@ -1381,7 +1267,7 @@ class SignatureFeatureExtractor(FeatureExtractor):
         self, raw_features: dict
     ) -> Tuple[List[str], np.ndarray]:
         features_selected = ["version"]
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features, features_selected, {}, self.feature_name
         )
 
@@ -1401,7 +1287,7 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
 
     @staticmethod
     def version_to_onehot(ver: Optional[str]) -> Dict[str, int]:
-        return _make_onehot_dict_from_str_keys(
+        return make_onehot_from_str_keys(
             [
                 "UNKNOWN",
                 "SEH",
@@ -1437,7 +1323,7 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
         }
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        load_configuration = _make_defaultdict_from_dict_elem(
+        load_configuration = make_defaultdict_from_dict_elem(
             raw_json, self.feature_name
         )
 
@@ -1490,7 +1376,7 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
             ],
             "guard_flags": load_configuration["guard_flags"],
             **self.extract_raw_features_from_code_integrity(
-                _make_defaultdict_from_dict_elem(
+                make_defaultdict_from_dict_elem(
                     load_configuration, "code_integrity"
                 )
             ),
@@ -1591,7 +1477,7 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
             "version": lambda x: list(x.values()),
             "process_heap_flags": lambda x: list(x.values()),
         }
-        return _vectorize_selected_features(
+        return vectorize_selected_features(
             raw_features,
             features_selected,
             post_process_funcs,
@@ -1614,7 +1500,7 @@ class LiefFeatureExtractor(FeatureExtractor):
             RelocationsFeatureExtractor(),
             TlsFeatureExtractor(),
             ExportFeatureExtractor(),
-            # DebugFeatureExtractor(),
+            # DebugFeatureExtractor(), # DebugFeature is currently not supported
             ImportsFeatureExtractor(),
             ResourcesTreeFeatureExtractor(),
             ResourcesManagerFeatureExtractor(),
@@ -1627,7 +1513,7 @@ class LiefFeatureExtractor(FeatureExtractor):
             extractor.feature_name: extractor.extract_raw_features(raw_json)
             for extractor in self.extractors
         }
-        # top-level defined features
+        # NOTE: top-level defined features
         raw_features["entrypoint"] = raw_json["entrypoint"]
         raw_features["virtual_size"] = raw_json["virtual_size"]
         return raw_features

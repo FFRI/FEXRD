@@ -1,0 +1,592 @@
+{
+  "dos_header": {
+    "addressof_new_exeheader": 64,
+    "addressof_relocation_table": 0,
+    "checksum": 0,
+    "file_size_in_pages": 0,
+    "header_size_in_paragraphs": 0,
+    "initial_ip": 0,
+    "initial_relative_cs": 0,
+    "initial_relative_ss": 0,
+    "initial_sp": 0,
+    "magic": 23117,
+    "maximum_extra_paragraphs": 0,
+    "minimum_extra_paragraphs": 0,
+    "numberof_relocation": 0,
+    "oem_id": 0,
+    "oem_info": 0,
+    "overlay_number": 0,
+    "reserved": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "reserved2": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "used_bytes_in_the_last_page": 0
+  },
+  "rich_header": {
+    "key": null,
+    "entries": null
+  },
+  "header": {
+    "signature": [
+      80,
+      69,
+      0,
+      0
+    ],
+    "machine": {
+      "INVALID": 0,
+      "UNKNOWN": 0,
+      "AMD64": 0,
+      "ARM": 0,
+      "ARM64": 0,
+      "I386": 1,
+      "OTHER": 0
+    },
+    "numberof_sections": 1,
+    "time_date_stamp": 0,
+    "numberof_symbols": 0,
+    "pointerto_symbol_table": 0,
+    "sizeof_optional_header": 224,
+    "characteristics": {
+      "RELOCS_STRIPPED": 0,
+      "EXECUTABLE_IMAGE": 1,
+      "LINE_NUMS_STRIPPED": 0,
+      "LOCAL_SYMS_STRIPPED": 0,
+      "AGGRESSIVE_WS_TRIM": 0,
+      "LARGE_ADDRESS_AWARE": 0,
+      "BYTES_REVERSED_LO": 0,
+      "CHARA_32BIT_MACHINE": 1,
+      "DEBUG_STRIPPED": 0,
+      "REMOVABLE_RUN_FROM_SWAP": 0,
+      "NET_RUN_FROM_SWAP": 0,
+      "SYSTEM": 0,
+      "DLL": 0,
+      "UP_SYSTEM_ONLY": 0,
+      "BYTES_REVERSED_HI": 0
+    }
+  },
+  "optional_header": {
+    "magic": 1,
+    "major_linker_version": 0,
+    "minor_linker_version": 0,
+    "sizeof_code": 0,
+    "sizeof_initialized_data": 0,
+    "sizeof_uninitialized_data": 0,
+    "addressof_entrypoint": 4096,
+    "baseof_code": 0,
+    "baseof_data": 0,
+    "imagebase": 4194304,
+    "section_alignment": 4096,
+    "file_alignment": 512,
+    "major_operating_system_version": 0,
+    "minor_operating_system_version": 0,
+    "major_image_version": 0,
+    "minor_image_version": 0,
+    "major_subsystem_version": 4,
+    "minor_subsystem_version": 0,
+    "win32_version_value": 0,
+    "sizeof_image": 8192,
+    "sizeof_headers": 352,
+    "checksum": 0,
+    "sizeof_stack_reserve": 0,
+    "sizeof_stack_commit": 0,
+    "sizeof_heap_reserve": 0,
+    "sizeof_heap_commit": 0,
+    "loader_flags": 0,
+    "numberof_rva_and_size": 16,
+    "subsystem": {
+      "UNKNOWN": 0,
+      "NATIVE": 0,
+      "WINDOWS_GUI": 0,
+      "WINDOWS_CUI": 1,
+      "OS2_CUI": 0,
+      "POSIX_CUI": 0,
+      "NATIVE_WINDOWS": 0,
+      "WINDOWS_CE_GUI": 0,
+      "EFI_APPLICATION": 0,
+      "EFI_BOOT_SERVICE_DRIVER": 0,
+      "EFI_RUNTIME_DRIVER": 0,
+      "EFI_ROM": 0,
+      "XBOX": 0,
+      "WINDOWS_BOOT_APPLICATION": 0,
+      "Out of range": 0
+    },
+    "dll_characteristics": {
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_HIGH_ENTROPY_VA": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_NX_COMPAT": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_NO_ISOLATION": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_NO_SEH": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_NO_BIND": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_APPCONTAINER": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_WDM_DRIVER": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_GUARD_CF": 0,
+      "DllCharacteristics.IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE": 0
+    }
+  },
+  "data_directories": {
+    "RVA": [
+      [
+        "EXPORT_TABLE",
+        0
+      ],
+      [
+        "IMPORT_TABLE",
+        0
+      ],
+      [
+        "RESOURCE_TABLE",
+        0
+      ],
+      [
+        "EXCEPTION_TABLE",
+        0
+      ],
+      [
+        "CERTIFICATE_TABLE",
+        0
+      ],
+      [
+        "BASE_RELOCATION_TABLE",
+        0
+      ],
+      [
+        "DEBUG",
+        0
+      ],
+      [
+        "ARCHITECTURE",
+        0
+      ],
+      [
+        "GLOBAL_PTR",
+        0
+      ],
+      [
+        "TLS_TABLE",
+        0
+      ],
+      [
+        "LOAD_CONFIG_TABLE",
+        0
+      ],
+      [
+        "BOUND_IMPORT",
+        0
+      ],
+      [
+        "IAT",
+        0
+      ],
+      [
+        "DELAY_IMPORT_DESCRIPTOR",
+        0
+      ],
+      [
+        "CLR_RUNTIME_HEADER",
+        0
+      ]
+    ],
+    "size": [
+      [
+        "EXPORT_TABLE",
+        0
+      ],
+      [
+        "IMPORT_TABLE",
+        0
+      ],
+      [
+        "RESOURCE_TABLE",
+        0
+      ],
+      [
+        "EXCEPTION_TABLE",
+        0
+      ],
+      [
+        "CERTIFICATE_TABLE",
+        0
+      ],
+      [
+        "BASE_RELOCATION_TABLE",
+        0
+      ],
+      [
+        "DEBUG",
+        0
+      ],
+      [
+        "ARCHITECTURE",
+        0
+      ],
+      [
+        "GLOBAL_PTR",
+        0
+      ],
+      [
+        "TLS_TABLE",
+        0
+      ],
+      [
+        "LOAD_CONFIG_TABLE",
+        0
+      ],
+      [
+        "BOUND_IMPORT",
+        0
+      ],
+      [
+        "IAT",
+        0
+      ],
+      [
+        "DELAY_IMPORT_DESCRIPTOR",
+        0
+      ],
+      [
+        "CLR_RUNTIME_HEADER",
+        0
+      ]
+    ],
+    "section": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "sections": {
+    "pointerto_relocation": [
+      [
+        "",
+        0
+      ]
+    ],
+    "pointerto_line_numbers": [
+      [
+        "",
+        0
+      ]
+    ],
+    "numberof_relocations": [
+      [
+        "",
+        0
+      ]
+    ],
+    "numberof_line_numbers": [
+      [
+        "",
+        0
+      ]
+    ],
+    "entropy": [
+      [
+        "",
+        5.376347230992362
+      ]
+    ],
+    "characteristics": {
+      "TYPE_NO_PAD": 0,
+      "CNT_CODE": 0,
+      "CNT_INITIALIZED_DATA": 0,
+      "CNT_UNINITIALIZED_DATA": 0,
+      "LNK_OTHER": 0,
+      "LNK_INFO": 0,
+      "LNK_REMOVE": 0,
+      "LNK_COMDAT": 0,
+      "GPREL": 0,
+      "MEM_PURGEABLE": 0,
+      "MEM_16BIT": 0,
+      "MEM_LOCKED": 0,
+      "MEM_PRELOAD": 0,
+      "ALIGN_1BYTES": 0,
+      "ALIGN_2BYTES": 0,
+      "ALIGN_4BYTES": 0,
+      "ALIGN_8BYTES": 0,
+      "ALIGN_16BYTES": 0,
+      "ALIGN_32BYTES": 0,
+      "ALIGN_64BYTES": 0,
+      "ALIGN_128BYTES": 0,
+      "ALIGN_256BYTES": 0,
+      "ALIGN_512BYTES": 0,
+      "ALIGN_1024BYTES": 0,
+      "ALIGN_2048BYTES": 0,
+      "ALIGN_4096BYTES": 0,
+      "ALIGN_8192BYTES": 0,
+      "LNK_NRELOC_OVFL": 0,
+      "MEM_DISCARDABLE": 0,
+      "MEM_NOT_CACHED": 0,
+      "MEM_NOT_PAGED": 0,
+      "MEM_SHARED": 0,
+      "MEM_EXECUTE": 1,
+      "MEM_READ": 0,
+      "MEM_WRITE": 1
+    },
+    "types": {
+      "TEXT": 0,
+      "TLS_": 0,
+      "IDATA": 0,
+      "DATA": 0,
+      "BSS": 0,
+      "RESOURCE": 0,
+      "RELOCATION": 0,
+      "EXPORT": 0,
+      "DEBUG": 0,
+      "UNKNOWN": 1,
+      "Out of range": 0
+    }
+  },
+  "relocations": {
+    "flattened_entries": []
+  },
+  "tls": {
+    "callbacks": 0,
+    "addressof_raw_data": 0,
+    "addressof_index": null,
+    "addressof_callbacks": null,
+    "sizoeof_zero_fill": null,
+    "characteristics": {
+      "SECTION_CHARACTERISTICS.ALIGN_1BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_2BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_4BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_8BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_16BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_32BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_64BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_128BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_256BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_512BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_1024BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_2048BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_4096BYTES": 0,
+      "SECTION_CHARACTERISTICS.ALIGN_8192BYTES": 0,
+      "SECTION_CHARACTERISTICS.???": 0,
+      "has_extra_bits": 0
+    },
+    "data_directory": {
+      "EXPORT_TABLE": 0,
+      "IMPORT_TABLE": 0,
+      "RESOURCE_TABLE": 0,
+      "EXCEPTION_TABLE": 0,
+      "CERTIFICATE_TABLE": 0,
+      "BASE_RELOCATION_TABLE": 0,
+      "DEBUG": 0,
+      "ARCHITECTURE": 0,
+      "GLOBAL_PTR": 0,
+      "TLS_TABLE": 0,
+      "LOAD_CONFIG_TABLE": 0,
+      "BOUND_IMPORT": 0,
+      "IAT": 0,
+      "DELAY_IMPORT_DESCRIPTOR": 0,
+      "CLR_RUNTIME_HEADER": 0
+    },
+    "section": null
+  },
+  "export": {
+    "export_flags": null,
+    "timestamp": null,
+    "major_version": null,
+    "minor_version": null,
+    "ordinal_base": null,
+    "name": null,
+    "entries_ordinal": null,
+    "entries_address": null,
+    "entries_is_extern": null
+  },
+  "imports": {
+    "dll_names": null,
+    "api_names": null,
+    "forwarder_chain": null,
+    "timedatestamp": null,
+    "import_address_table_rva": null,
+    "iat_address": null,
+    "data": null,
+    "hint": null
+  },
+  "resources_tree": {
+    "characteristics": null,
+    "major_version": null,
+    "minor_version": null,
+    "numberof_id_entries": null,
+    "numberof_name_entries": null,
+    "time_date_stamp": null
+  },
+  "resources_manager": {
+    "manifest": null,
+    "version_type": null,
+    "version_key": 0,
+    "version_fixed_file_info_signature": null,
+    "version_fixed_file_info_struct_version": null,
+    "version_fixed_file_info_file_version_MS": null,
+    "version_fixed_file_info_file_version_LS": null,
+    "version_fixed_file_info_file_flags_mask": {
+      "DEBUG": 0,
+      "INFOINFERRED": 0,
+      "PATCHED": 0,
+      "PRERELEASE": 0,
+      "PRIVATEBUILD": 0,
+      "SPECIALBUILD": 0
+    },
+    "version_fixed_file_info_file_flags": {
+      "DEBUG": 0,
+      "INFOINFERRED": 0,
+      "PATCHED": 0,
+      "PRERELEASE": 0,
+      "PRIVATEBUILD": 0,
+      "SPECIALBUILD": 0
+    },
+    "version_fixed_file_info_file_os": {
+      "DOS": 0,
+      "DOS_WINDOWS16": 0,
+      "DOS_WINDOWS32": 0,
+      "NT": 0,
+      "NT_WINDOWS32": 0,
+      "OS216": 0,
+      "OS216_PM16": 0,
+      "OS232": 0,
+      "OS232_PM32": 0,
+      "PM16": 0,
+      "PM32": 0,
+      "UNKNOWN": 0,
+      "WINDOWS16": 0,
+      "WINDOWS32": 0,
+      "Out of range": 0
+    },
+    "version_fixed_file_info_file_type": {
+      "APP": 0,
+      "DLL": 0,
+      "DRV": 0,
+      "FONT": 0,
+      "STATIC_LIB": 0,
+      "VXD": 0,
+      "UNKNOWN": 0,
+      "Out of range": 0
+    },
+    "version_fixed_file_info_file_subtype": {
+      "DRV_COMM": 0,
+      "DRV_DISPLAY": 0,
+      "DRV_INSTALLABLE": 0,
+      "DRV_KEYBOARD": 0,
+      "DRV_LANGUAGE": 0,
+      "DRV_MOUSE": 0,
+      "DRV_NETWORK": 0,
+      "DRV_PRINTER": 0,
+      "DRV_SOUND": 0,
+      "DRV_SYSTEM": 0,
+      "DRV_VERSIONED_PRINTER": 0,
+      "UNKNOWN": 0,
+      "Out of range": 0
+    },
+    "version_fixed_file_info_file_date_MS": null,
+    "version_fixed_file_info_file_date_LS": null,
+    "version_string_file_info_type": null,
+    "version_string_file_info_key": 0,
+    "version_var_file_info_type": null,
+    "version_var_file_info_key": 0
+  },
+  "signature": {
+    "version": null,
+    "content_info_content_type": null,
+    "content_info_digest_algorithm": null,
+    "content_info_type": null,
+    "signer_info_version": null,
+    "signer_info_digest_algorithm": null,
+    "signer_info_signature_algorithm": null,
+    "signer_info_authenticated_attributes_content_type": null,
+    "signer_info_authenticated_attributes_program_name": null,
+    "signer_info_authenticated_attributes_url": null,
+    "signer_info_authenticated_attributes_message_digest": null,
+    "signer_info_issuer": null,
+    "certificates": null
+  },
+  "load_configuration": {
+    "version": {
+      "UNKNOWN": 0,
+      "SEH": 0,
+      "WIN_8_1": 0,
+      "WIN10_0_9879": 0,
+      "WIN10_0_14286": 0,
+      "WIN10_0_14383": 0,
+      "WIN10_0_14901": 0,
+      "WIN10_0_15002": 0,
+      "WIN10_0_16237": 0
+    },
+    "characteristics": null,
+    "timedatestamp": null,
+    "major_version": null,
+    "minor_version": null,
+    "global_flags_clear": null,
+    "global_flags_set": null,
+    "critical_section_default_timeout": null,
+    "decommit_free_block_threshold": null,
+    "decommit_total_free_threshold": null,
+    "lock_prefix_table": null,
+    "maximum_allocation_size": null,
+    "virtual_memory_threshold": null,
+    "process_affinity_mask": null,
+    "process_heap_flags": {
+      "ProcessHeapFlags.HEAP_CREATE_ENABLE_EXECUTE": 0,
+      "ProcessHeapFlags.HEAP_GENERATE_EXCEPTIONS": 0,
+      "ProcessHeapFlags.HEAP_NO_SERIALIZE": 0
+    },
+    "csd_version": null,
+    "reserved1": null,
+    "security_cookie": null,
+    "se_handler_table": null,
+    "se_handler_count": null,
+    "guard_cf_check_function_pointer": null,
+    "guard_cf_dispatch_function_pointer": null,
+    "guard_cf_function_table": null,
+    "guard_cf_function_count": null,
+    "guard_flags": null,
+    "code_integrity_flags": null,
+    "code_integrity_catalog": null,
+    "code_integrity_catalog_offset": null,
+    "code_integrity_reserved": null,
+    "guard_address_taken_iat_entry_table": null,
+    "guard_address_taken_iat_entry_count": null,
+    "guard_long_jump_target_table": null,
+    "guard_long_jump_target_count": null,
+    "dynamic_value_reloc_table": null,
+    "hybrid_metadata_pointer": null,
+    "guard_rf_failure_routine": null,
+    "guard_rf_failure_routine_function_pointer": null,
+    "dynamic_value_reloctable_offset": null,
+    "dynamic_value_reloctable_section": null,
+    "reserved2": null,
+    "guard_rf_verify_stackpointer_function_pointer": null,
+    "hotpatch_table_offset": null,
+    "reserved3": null,
+    "addressof_unicode_string": null
+  },
+  "entrypoint": 4198400,
+  "virtual_size": 8192
+}

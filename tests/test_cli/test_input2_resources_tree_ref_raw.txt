@@ -1,0 +1,8 @@
+{
+  "characteristics": 0,
+  "major_version": 0,
+  "minor_version": 0,
+  "numberof_id_entries": 5,
+  "numberof_name_entries": 0,
+  "time_date_stamp": 0
+}

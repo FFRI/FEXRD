@@ -1,0 +1,98 @@
+{
+  "export_flags": 0,
+  "timestamp": 0,
+  "major_version": 0,
+  "minor_version": 0,
+  "ordinal_base": 0,
+  "name": "MZ\\x90",
+  "entries_ordinal": [
+    [
+      "standard:LoopHere",
+      0
+    ],
+    [
+      "standard:LoopOnceAgain",
+      1
+    ],
+    [
+      "msvcrt:printf",
+      2
+    ],
+    [
+      "standard:GroundHogDay",
+      3
+    ],
+    [
+      "standard:Yang",
+      4
+    ],
+    [
+      "standard:Ying",
+      5
+    ],
+    [
+      "MZ\\x90:export",
+      6
+    ]
+  ],
+  "entries_address": [
+    [
+      "standard:LoopHere",
+      0
+    ],
+    [
+      "standard:LoopOnceAgain",
+      0
+    ],
+    [
+      "msvcrt:printf",
+      0
+    ],
+    [
+      "standard:GroundHogDay",
+      0
+    ],
+    [
+      "standard:Yang",
+      0
+    ],
+    [
+      "standard:Ying",
+      0
+    ],
+    [
+      "MZ\\x90:export",
+      10913
+    ]
+  ],
+  "entries_is_extern": [
+    [
+      "standard:LoopHere",
+      true
+    ],
+    [
+      "standard:LoopOnceAgain",
+      true
+    ],
+    [
+      "msvcrt:printf",
+      true
+    ],
+    [
+      "standard:GroundHogDay",
+      true
+    ],
+    [
+      "standard:Yang",
+      true
+    ],
+    [
+      "standard:Ying",
+      true
+    ],
+    [
+      "MZ\\x90:export",
+      false
+    ]
+  ]
+}

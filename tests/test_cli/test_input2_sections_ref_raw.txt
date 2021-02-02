@@ -1,0 +1,82 @@
+{
+  "pointerto_relocation": [
+    [
+      "",
+      0
+    ]
+  ],
+  "pointerto_line_numbers": [
+    [
+      "",
+      0
+    ]
+  ],
+  "numberof_relocations": [
+    [
+      "",
+      0
+    ]
+  ],
+  "numberof_line_numbers": [
+    [
+      "",
+      0
+    ]
+  ],
+  "entropy": [
+    [
+      "",
+      5.541750259708888
+    ]
+  ],
+  "characteristics": {
+    "TYPE_NO_PAD": 0,
+    "CNT_CODE": 0,
+    "CNT_INITIALIZED_DATA": 0,
+    "CNT_UNINITIALIZED_DATA": 0,
+    "LNK_OTHER": 0,
+    "LNK_INFO": 0,
+    "LNK_REMOVE": 0,
+    "LNK_COMDAT": 0,
+    "GPREL": 0,
+    "MEM_PURGEABLE": 0,
+    "MEM_16BIT": 0,
+    "MEM_LOCKED": 0,
+    "MEM_PRELOAD": 0,
+    "ALIGN_1BYTES": 0,
+    "ALIGN_2BYTES": 0,
+    "ALIGN_4BYTES": 0,
+    "ALIGN_8BYTES": 0,
+    "ALIGN_16BYTES": 0,
+    "ALIGN_32BYTES": 0,
+    "ALIGN_64BYTES": 0,
+    "ALIGN_128BYTES": 0,
+    "ALIGN_256BYTES": 0,
+    "ALIGN_512BYTES": 0,
+    "ALIGN_1024BYTES": 0,
+    "ALIGN_2048BYTES": 0,
+    "ALIGN_4096BYTES": 0,
+    "ALIGN_8192BYTES": 0,
+    "LNK_NRELOC_OVFL": 0,
+    "MEM_DISCARDABLE": 0,
+    "MEM_NOT_CACHED": 0,
+    "MEM_NOT_PAGED": 0,
+    "MEM_SHARED": 0,
+    "MEM_EXECUTE": 1,
+    "MEM_READ": 0,
+    "MEM_WRITE": 1
+  },
+  "types": {
+    "TEXT": 0,
+    "TLS_": 1,
+    "IDATA": 1,
+    "DATA": 0,
+    "BSS": 0,
+    "RESOURCE": 1,
+    "RELOCATION": 1,
+    "EXPORT": 0,
+    "DEBUG": 0,
+    "UNKNOWN": 1,
+    "Out of range": 1
+  }
+}

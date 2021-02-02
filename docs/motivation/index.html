@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Motivation - FEXRD Documentation</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">FEXRD Documentation</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Introduction</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Motivation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../basic_usage/" class="nav-link">Basic Usage</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../advanced_usage/" class="nav-link">Advanced Usage</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../basic_usage/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+
+            <li class="nav-item" data-level="1"><a href="#why-fexrd" class="nav-link">Why FEXRD?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="why-fexrd">Why FEXRD?</h1>
+<p>FFRI Dataset is a dataset that can be used for a wide variety of research by containing each tool's raw output (e.g., lief, TrID, and peHash). An example in the FFRI Dataset 2020 is shown below. It is formatted as JSON, and its keys correspond to the names of the tools, and its values correspond to the tool's raw outputs.</p>
+<pre><code class="language-json">{
+  &quot;label&quot;: 0,
+  &quot;date&quot;: null,
+  &quot;version&quot;: &quot;2020&quot;,
+  &quot;file_size&quot;: 12288,
+  &quot;hashes&quot;: {
+    &quot;md5&quot;: &quot;c5560c9b347ac6355dd7020b9a841ffc&quot;,
+    &quot;sha1&quot;: &quot;437f5ccdf1fefc4f42442ddc22f46e4c34f1ae9f&quot;,
+    &quot;sha256&quot;: &quot;e215fbbdf2a9fec8161808a41d371228882202d63924a99d0efbdae54c4d8f23&quot;,
+    &quot;ssdeep&quot;: &quot;192:k8xZxfjo/vNxzp/yChtHmNn9sAzdN+j7RIY+Oifwhy681sy3Q5tfqXU/YEm:fxro/HzpyagNntajN/+p31TEm&quot;,
+    &quot;imphash&quot;: &quot;7d3ef9faa2be833b9d39423cd3ed8b07&quot;,
+    &quot;impfuzzy&quot;: &quot;48:8/Tbnw/LnNV06EAjIj1fB+xBMLSQMftMS1o:8nnw/LNVxEAkjZsXvtMS1o&quot;,
+    &quot;tlsh&quot;: &quot;C4422B47BF564CFBC66943748463074AE1B17E418733A3CF13A9912D1FA6781312AA9C&quot;,
+    &quot;totalhash&quot;: null,
+    &quot;anymaster&quot;: &quot;69631d85bdfc28870624870bb6dfd9c3defe4612&quot;,
+    &quot;anymaster_v1_0_1&quot;: &quot;c1b9817d0a3e3eec7b1c53ba03460e4abc3d8f8c&quot;,
+    &quot;endgame&quot;: &quot;d97267dd40d12b532b38daa246886bf0&quot;,
+    &quot;crits&quot;: &quot;ce4c40d39ef962b9681c2ffe3984ad7ef7311bcd&quot;,
+    &quot;pehashng&quot;: &quot;05c0ba3fd00cbd6615ebd83c5d57b85840f12673934b761fafb9893f786a6419&quot;
+  },
+  &quot;lief&quot;: {
+    &quot;data_directories&quot;: [
+      {
+        &quot;RVA&quot;: 0,
+        &quot;size&quot;: 0,
+        &quot;type&quot;: &quot;EXPORT_TABLE&quot;
+      },
+      {
+        &quot;RVA&quot;: 10580,
+        &quot;section&quot;: &quot;.rdata&quot;,
+      }
+  ...
+  }
+  ...
+}
+</code></pre>
+<p>For machine learning research, we need to convert the data into fixed-dimensional vectors. Since the JSON data is heavily nested, you might be annoyed by too high-dimensional vectors if you just flatten the data.</p>
+<p>FEXRD makes it easy for you to obtain fixed-dimensional vectors suitable for machine learning research from the FFRI Dataset.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -2,11 +2,11 @@ Feature EXtractor for FFRI Dataset (FEXRD)
 =======================================
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 
-Extract features from FFRI Dataset
+Make feature vectors from FFRI Dataset
 
 Requirements
 ---------------------------------------
-- Python 3.6 or higher
+- Python (3.6, 3.7, 3.8)
 - poetry (for building from scratch)
 
 Install
@@ -26,7 +26,8 @@ Alternatively, you can build from source code as follows.
 
 ```
 $ poetry shell
-$ poetry install # will take a few hours because it builds LIEF from scratch. Take a break and grab a cofee :)
+$ poetry update # will take a few hours because it builds LIEF from scratch. Take a break and grab a cofee :)
+$ poetry install
 $ python
 >>> import json
 >>> from fexrd import LiefFeatureExtractor
@@ -35,6 +36,10 @@ $ python
 >>> obj = json.loads(fin.read())
 >>> lfe.get_features(obj["lief"])
 ```
+
+How to use?
+---------------------------------------
+See the [documentation](https://github.com/FFRI/FEXRD/blob/master/docs_src/src/index.md) for more details.
 
 Author
 ---------------------------------------

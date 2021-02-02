@@ -1,7 +1,6 @@
-"""
-Author of this code work, Koh M. Nakagawa. c FFRI Security, Inc. 2020
-"""
-
+#
+# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+#
 import csv
 import glob
 import json
@@ -10,7 +9,6 @@ from pathlib import Path
 from typing import List
 
 import pytest
-
 from fexrd import SignatureFeatureExtractor
 
 target_test_json: List[str] = glob.glob(
@@ -28,7 +26,7 @@ def test_get_features(
     feature_extractor: SignatureFeatureExtractor, test_json: str, datadir: Path
 ) -> None:
     ref_data: str = str(
-        datadir / f"{os.path.splitext(test_json)[0]}_ref_features.csv"
+        datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv"
     )
     with open(ref_data, "r") as fin:
         reader = csv.reader(fin)
