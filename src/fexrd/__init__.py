@@ -1,10 +1,17 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 
-__version__ = "0.2.0"
+__version__ = "v2021.2"
 
 from .all_features import AllFeaturesExtractor
+from .die import DieFeatureExtractor
+from .exceptions import (
+    FexrdBaseException,
+    InvalidVersion,
+    NotImplementedYet,
+    NotSupported,
+)
 from .feature_extractor import FeatureExtractor
 from .lief import (
     DataDirectoriesFeatureExtractor,
@@ -24,6 +31,7 @@ from .lief import (
     SignatureFeatureExtractor,
     TlsFeatureExtractor,
 )
+from .manalyze import ManalyzeFeatureExtractor
 from .peid import PeidFeatureExtractor
 from .strings import StringsFeatureExtractor
 from .trid import TridFeatureExtractor
@@ -47,8 +55,14 @@ __all__ = [
     "LoadConfigurationFeatureExtractor",
     "PeidFeatureExtractor",
     "TridFeatureExtractor",
+    "DieFeatureExtractor",
+    "ManalyzeFeatureExtractor",
     "StringsFeatureExtractor",
     "AllFeaturesExtractor",
     "FeatureExtractor",
+    "FexrdBaseException",
+    "InvalidVersion",
+    "NotImplementedYet",
+    "NotSupported",
     "__version__",
 ]

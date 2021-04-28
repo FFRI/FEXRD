@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 import json
 import sys
@@ -12,6 +12,7 @@ from . import (
     AllFeaturesExtractor,
     DataDirectoriesFeatureExtractor,
     DebugFeatureExtractor,
+    DieFeatureExtractor,
     DosHeaderFeatureExtractor,
     ExportFeatureExtractor,
     FeatureExtractor,
@@ -19,6 +20,7 @@ from . import (
     ImportsFeatureExtractor,
     LiefFeatureExtractor,
     LoadConfigurationFeatureExtractor,
+    ManalyzeFeatureExtractor,
     OptionalHeaderFeatureExtractor,
     PeidFeatureExtractor,
     RelocationsFeatureExtractor,
@@ -31,14 +33,19 @@ from . import (
     TlsFeatureExtractor,
     TridFeatureExtractor,
 )
+from .utils import ver_str_to_int
 
 app = typer.Typer()
 
 
-def feature_name_to_extractor() -> Dict[str, FeatureExtractor]:
-    return {
-        f.feature_name: f()
-        for f in (
+def feature_name_to_extractor(
+    ver_str: Optional[str],
+) -> Dict[str, FeatureExtractor]:
+    if ver_str is None:
+        ver_str = "v2021"
+    ver = ver_str_to_int(ver_str)
+    extractors_dict = {
+        2020: [
             LiefFeatureExtractor,
             DosHeaderFeatureExtractor,
             RichHeaderFeatureExtractor,
@@ -59,11 +66,24 @@ def feature_name_to_extractor() -> Dict[str, FeatureExtractor]:
             TridFeatureExtractor,
             StringsFeatureExtractor,
             AllFeaturesExtractor,
-        )
+        ],
+        2021: [
+            DieFeatureExtractor,
+            ManalyzeFeatureExtractor,
+        ],
     }
 
+    fes = [
+        ext(ver_str)
+        for v, exts in extractors_dict.items()
+        if v <= ver
+        for ext in exts
+    ]
 
-def feature_name_to_obj(obj: dict) -> Dict[str, dict]:
+    return {fe.feature_name: fe for fe in fes}
+
+
+def feature_name_to_obj(obj: dict, ver_str: str) -> Dict[str, dict]:
     f_to_obj = {
         name: obj[name]
         for name in (
@@ -73,6 +93,17 @@ def feature_name_to_obj(obj: dict) -> Dict[str, dict]:
             LiefFeatureExtractor.feature_name,
         )
     }
+
+    if ver_str != "v2020":
+        f_to_obj.update(
+            {
+                name: obj[name]
+                for name in (
+                    DieFeatureExtractor.feature_name,
+                    ManalyzeFeatureExtractor.feature_name,
+                )
+            }
+        )
 
     def get_if_key_exits(obj: Dict[str, dict], key: str) -> Optional[dict]:
         return obj if key in obj.keys() else None
@@ -96,6 +127,7 @@ def feature_name_to_obj(obj: dict) -> Dict[str, dict]:
                 ResourcesManagerFeatureExtractor.feature_name,
                 SignatureFeatureExtractor.feature_name,
                 LoadConfigurationFeatureExtractor.feature_name,
+                "signatures",
             )
         }
     )
@@ -106,12 +138,13 @@ def feature_name_to_obj(obj: dict) -> Dict[str, dict]:
 @app.command()
 def show_raw_dict(
     input_json: str,
+    ver_str: str,
     extractor_name: str = typer.Argument(
         ...,
-        help=f'Available feature names are:\n {", ".join(feature_name_to_extractor().keys())} ',
+        help=f'Show an output of extract_raw_feature method. Available feature names are:\n {", ".join(feature_name_to_extractor(None).keys())}',
     ),
 ) -> None:
-    f_to_e = feature_name_to_extractor()
+    f_to_e = feature_name_to_extractor(ver_str)
     if extractor_name not in f_to_e.keys():
         typer.echo(f"feature name: {extractor_name} is not found", err=True)
         typer.echo("Available features are:", err=True)
@@ -122,12 +155,12 @@ def show_raw_dict(
     with open(input_json, "r") as fin:
         obj = json.loads(fin.read())
 
-    obj_to_be_processed = feature_name_to_obj(obj)[fe.feature_name]
+    obj_to_be_processed = feature_name_to_obj(obj, ver_str)[fe.feature_name]
     if obj_to_be_processed:
         typer.echo(
             json.dumps(
                 fe.extract_raw_features(
-                    feature_name_to_obj(obj)[fe.feature_name]
+                    feature_name_to_obj(obj, ver_str)[fe.feature_name]
                 ),
                 indent=2,
             )
@@ -139,12 +172,13 @@ def show_raw_dict(
 @app.command()
 def show_vec(
     input_json: str,
+    ver_str: str,
     extractor_name: str = typer.Argument(
         ...,
-        help=f'Available feature names are:\n {", ".join(feature_name_to_extractor().keys())} ',
+        help=f'Show an output of vectorize_features. Available feature names are: {", ".join(feature_name_to_extractor(None).keys())}',
     ),
 ) -> None:
-    f_to_e = feature_name_to_extractor()
+    f_to_e = feature_name_to_extractor(ver_str)
     if extractor_name not in f_to_e.keys():
         typer.echo(f"feature name: {extractor_name} is not found", err=True)
         typer.echo("Available features are:", err=True)
@@ -155,10 +189,10 @@ def show_vec(
     with open(input_json, "r") as fin:
         obj = json.loads(fin.read())
 
-    obj_to_be_processed = feature_name_to_obj(obj)[fe.feature_name]
+    obj_to_be_processed = feature_name_to_obj(obj, ver_str)[fe.feature_name]
     if obj_to_be_processed:
         columns, vec = fe.get_features(
-            feature_name_to_obj(obj)[fe.feature_name]
+            feature_name_to_obj(obj, ver_str)[fe.feature_name]
         )
         df = pd.DataFrame(vec.reshape(1, vec.shape[0]), columns=columns)
         typer.echo(df.to_csv(sys.stdout, index=False))

@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 
 import sys

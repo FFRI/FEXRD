@@ -11,7 +11,7 @@ from typing import List, Optional
 
 import pytest
 
-from fexrd import HeaderFeatureExtractor
+from fexrd import ManalyzeFeatureExtractor
 
 target_test_json: List[str] = glob.glob(
     os.path.join(os.path.abspath(os.path.splitext(__file__)[0]), "*", "*.json")
@@ -22,8 +22,8 @@ def get_ver_str(path: str) -> str:
     return path.split("/")[-2]
 
 
-def make_feature_extractor(ver_str: str) -> Optional[HeaderFeatureExtractor]:
-    return HeaderFeatureExtractor(ver_str)
+def make_feature_extractor(ver_str: str) -> Optional[ManalyzeFeatureExtractor]:
+    return ManalyzeFeatureExtractor(ver_str)
 
 
 @pytest.mark.parametrize("test_json", target_test_json)
@@ -43,7 +43,9 @@ def test_get_features(test_json: str, datadir: Path) -> None:
 
     with open(str(datadir / test_json), "r") as fin:
         obj = json.loads(fin.read())
-    columns, feature_vector = feature_extractor.get_features(obj["lief"])
+    columns, feature_vector = feature_extractor.get_features(
+        obj["manalyze_plugin_packer"]
+    )
 
     assert columns == columns_ref
     assert list(feature_vector) == pytest.approx(feature_vector_ref)
@@ -64,6 +66,8 @@ def test_extract_raw_features(test_json: str, datadir: Path) -> None:
 
     with open(str(datadir / test_json), "r") as fin:
         obj = json.loads(fin.read())
-    raw_features = feature_extractor.extract_raw_features(obj["lief"])
+    raw_features = feature_extractor.extract_raw_features(
+        obj["manalyze_plugin_packer"]
+    )
 
     assert raw_features == obj_ref

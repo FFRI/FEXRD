@@ -1,13 +1,16 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 
 from enum import Enum
+from statistics import mean
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import lief
 import numpy as np
+from bs4 import BeautifulSoup
 
+from .exceptions import NotSupported
 from .feature_extractor import FeatureExtractor
 from .utils import (
     make_defaultdict_from_dict_elem,
@@ -15,22 +18,23 @@ from .utils import (
     make_onehot_from_str_keys,
     vectorize_selected_features,
     vectorize_with_feature_hasher,
+    ver_str_to_int,
 )
-
-assert lief.__version__.startswith("0.11.0"), "Supported LIEF version is 0.11.0"
 
 
 class DosHeaderFeatureExtractor(FeatureExtractor):
     feature_name = "dos_header"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
 
 class RichHeaderFeatureExtractor(FeatureExtractor):
     feature_name = "rich_header"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     def extract_raw_features(self, raw_json: dict) -> dict:
@@ -73,7 +77,8 @@ class RichHeaderFeatureExtractor(FeatureExtractor):
 class HeaderFeatureExtractor(FeatureExtractor):
     feature_name = "header"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -179,7 +184,8 @@ class DllCharacteristics(Enum):
 class OptionalHeaderFeatureExtractor(FeatureExtractor):
     feature_name = "optional_header"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -315,7 +321,8 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
 class DataDirectoriesFeatureExtractor(FeatureExtractor):
     feature_name = "data_directories"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -374,7 +381,8 @@ class DataDirectoriesFeatureExtractor(FeatureExtractor):
 class SectionsFeatureExtractor(FeatureExtractor):
     feature_name = "sections"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -522,7 +530,8 @@ class SectionsFeatureExtractor(FeatureExtractor):
 class RelocationsFeatureExtractor(FeatureExtractor):
     feature_name = "relocations"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -539,11 +548,8 @@ class RelocationsFeatureExtractor(FeatureExtractor):
                     )
         return flattened_entries
 
-    # NOTE: This method is only valid for LIEF v0.10.1
-    # TODO: support LIEF v0.11 or later
-    @staticmethod
     def count_relocation_types(
-        flattend_entries: Optional[List[Tuple[int, str]]]
+        self, flattend_entries: Optional[List[Tuple[int, str]]]
     ) -> List[int]:
         buckets = {
             "ABSOLUTE": 0,
@@ -555,11 +561,16 @@ class RelocationsFeatureExtractor(FeatureExtractor):
             "SECTION": 0,
             "REL | ARM_MOV32T | THUMB_MOV32 | RISCV_LOW12I": 0,
             "RISCV_LOW12S": 0,
-            "MIPS_JMPADDR16 | IA64_DIR64": 0,
             "DIR64": 0,
             "HIGH3ADJ": 0,
             "Out of range": 0,
+            "MIPS_JMPADDR16 | IA64_IMM64": 0,
         }
+        # NOTE: https://github.com/lief-project/LIEF/commit/38f48a6e12f6cd46a657a4f354686333e8df4140
+        if self.ver == 2020:
+            buckets.pop("MIPS_JMPADDR16 | IA64_IMM64")
+            buckets["MIPS_JMPADDR16 | IA64_DIR64"] = 0
+
         if flattend_entries:
             for _, type_ in flattend_entries:
                 buckets[type_] += 1
@@ -593,7 +604,8 @@ class RelocationsFeatureExtractor(FeatureExtractor):
 class TlsFeatureExtractor(FeatureExtractor):
     feature_name = "tls"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -702,7 +714,8 @@ class TlsFeatureExtractor(FeatureExtractor):
 class ExportFeatureExtractor(FeatureExtractor):
     feature_name = "export"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -796,7 +809,8 @@ class ExportFeatureExtractor(FeatureExtractor):
 class DebugFeatureExtractor(FeatureExtractor):
     feature_name = "debug"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     # TODO: vectorize debug feature
@@ -809,7 +823,8 @@ class DebugFeatureExtractor(FeatureExtractor):
 class ImportsFeatureExtractor(FeatureExtractor):
     feature_name = "imports"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -929,7 +944,8 @@ class ImportsFeatureExtractor(FeatureExtractor):
 class ResourcesTreeFeatureExtractor(FeatureExtractor):
     feature_name = "resources_tree"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     def extract_raw_features(self, raw_json: dict) -> dict:
@@ -949,13 +965,9 @@ class ResourcesTreeFeatureExtractor(FeatureExtractor):
 class ResourcesManagerFeatureExtractor(FeatureExtractor):
     feature_name = "resources_manager"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
-
-    # TODO: should parse manifest XML using xmltodict
-    # @staticmethod
-    # def parse_manifest_content():
-    #     pass
 
     @staticmethod
     def fixed_version_file_flags_to_onehot(
@@ -1038,16 +1050,25 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             file_subtype,
         )
 
-    # @staticmethod
-    # def langcode_items_to_featurevector(langcode_items):
-    #     pass
+    @staticmethod
+    def extract_raw_features_from_html(html: List[str]) -> dict:
+        prefix = "html"
 
-    # @staticmethod
-    # def translations_to_featurevector(translations):
-    #     pass
+        def is_html(e: str) -> bool:
+            try:
+                return bool(BeautifulSoup(e, "html.parser").find())
+            except Exception:
+                return False
 
+        number_of_non_htmls = sum(is_html(e) for e in html)
+        return {
+            f"{prefix}_avg_len": mean(len(e) for e in html) if html else 0,
+            f"{prefix}_number_of_non_htmls": number_of_non_htmls if html else 0,
+        }
+
+    @staticmethod
     def extract_raw_features_from_version(
-        self, version: DefaultDict[str, Any]
+        version: DefaultDict[str, Any]
     ) -> dict:
         prefix = "version"
         return {
@@ -1120,18 +1141,12 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             # f"{prefix}_{cprefix}_translations": self.translations_to_featurevector(var_file_info["translations"])
         }
 
-    def extract_raw_features_from_icons(
-        self, icons: DefaultDict[str, Any]
-    ) -> dict:
-        # TODO: should be implemented for icons
-        pass
-
     def extract_raw_features(self, raw_json: dict) -> dict:
         resources_manager = make_defaultdict_from_dict_elem(
             raw_json, self.feature_name
         )
         version = make_defaultdict_from_dict_elem(resources_manager, "version")
-        return {
+        raw_features = {
             # NOTE: extracted but not converted to feature vector
             # TODO: should parse manifest XML file
             "manifest": resources_manager["manifest"],
@@ -1145,12 +1160,24 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             **self.extract_raw_features_from_var_file_info(
                 make_defaultdict_from_dict_elem(version, "var_file_info")
             ),
-            # **self.extract_raw_features_from_icons(
-            #     _make_defaultdict_from_dict_elem(
-            #         resources_manager, "icons"
-            #     )
-            # )
         }
+        if self.ver >= 2021:
+            raw_features.update(
+                self.extract_raw_features_from_html(
+                    resources_manager["html"]
+                    if "html" in resources_manager.keys()
+                    else []
+                )
+            )
+            raw_features["has_string_table"] = (
+                "string_table" in resources_manager.keys()
+            )
+            raw_features["has_icons"] = "icons" in resources_manager.keys()
+            raw_features["has_dialogs"] = "dialogs" in resources_manager.keys()
+            raw_features["has_accelerator"] = (
+                "accelerator" in resources_manager.keys()
+            )
+        return raw_features
 
     def vectorize_features(
         self, raw_features: dict
@@ -1174,6 +1201,13 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             "version_var_file_info_type",
             "version_var_file_info_key",
         ]
+        if self.ver >= 2021:
+            features_selected.append("html_avg_len")
+            features_selected.append("html_number_of_non_htmls")
+            features_selected.append("has_string_table")
+            features_selected.append("has_icons")
+            features_selected.append("has_dialogs")
+            features_selected.append("has_accelerator")
         post_process_funcs = {
             "version_fixed_file_info_file_flags_mask": lambda x: list(
                 x.values()
@@ -1194,8 +1228,11 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
 class SignatureFeatureExtractor(FeatureExtractor):
     feature_name = "signature"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
+        if self.ver >= 2021:
+            self.feature_name = "signatures"
 
     # TODO: should be implemented
     # @staticmethod
@@ -1241,34 +1278,194 @@ class SignatureFeatureExtractor(FeatureExtractor):
         }
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        signature = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
-        signer_info = make_defaultdict_from_dict_elem(signature, "signer_info")
+        if self.ver == 2020:
+            signature = make_defaultdict_from_dict_elem(
+                raw_json, self.feature_name
+            )
+            signer_info = make_defaultdict_from_dict_elem(
+                signature, "signer_info"
+            )
+            return {
+                "version": signature["version"],
+                # NOTE: extracted but not converted to feature vector
+                **self.extract_raw_features_from_content_info(
+                    make_defaultdict_from_dict_elem(signature, "content_info")
+                ),
+                # NOTE: extracted but not converted to feature vector
+                **self.extract_raw_features_from_signer_info(signer_info),
+                # NOTE: extracted but not converted to feature vector
+                **self.extract_raw_features_from_authenticated_attributres(
+                    make_defaultdict_from_dict_elem(
+                        signer_info, "authenticated_attributes"
+                    )
+                ),
+                # NOTE: extracted but not converted to feature vector
+                "signer_info_issuer": signer_info["issuer"],
+                # TODO: make feature vector from certificates array
+                "certificates": signature["certificates"],
+            }
+        elif self.ver == 2021:
+            # TODO: extract other properties contained in raw_json["signatures"]
+            return {
+                "number_of_signatures": len(raw_json["signatures"])
+                if "signatures" in raw_json.keys()
+                else 0
+            }
+        else:
+            raise NotSupported(self.ver, self.__class__.__name__)
+
+    def vectorize_features(
+        self, raw_features: dict
+    ) -> Tuple[List[str], np.ndarray]:
+        if self.ver == 2020:
+            features_selected = ["version"]
+            return vectorize_selected_features(
+                raw_features, features_selected, {}, self.feature_name
+            )
+        elif self.ver == 2021:
+            features_selected = ["number_of_signatures"]
+            return vectorize_selected_features(
+                raw_features, features_selected, {}, self.feature_name
+            )
+        else:
+            raise NotSupported(self.ver, self.__class__.__name__)
+
+
+class SymbolsFeatureExtractor(FeatureExtractor):
+    feature_name = "symbols"
+
+    @staticmethod
+    def make_base_type_hist() -> Dict[str, int]:
         return {
-            "version": signature["version"],
-            # NOTE: extracted but not converted to feature vector
-            **self.extract_raw_features_from_content_info(
-                make_defaultdict_from_dict_elem(signature, "content_info")
+            "NULL": 0,
+            "VOID": 0,
+            "CHAR": 0,
+            "SHORT": 0,
+            "INT": 0,
+            "LONG": 0,
+            "FLOAT": 0,
+            "DOUBLE": 0,
+            "STRUCT": 0,
+            "UNION": 0,
+            "ENUM": 0,
+            "MOE": 0,
+            "BYTE": 0,
+            "WORD": 0,
+            "UINT": 0,
+            "DWORD": 0,
+            "Out of range": 0,
+        }
+
+    @staticmethod
+    def make_complex_type_hist() -> Dict[str, int]:
+        return {
+            "NULL": 0,
+            "POINTER": 0,
+            "FUNCTION": 0,
+            "ARRAY": 0,
+            "COMPLEX_TYPE_SHIFT": 0,
+            "Out of range": 0,
+        }
+
+    @staticmethod
+    def make_storage_class_hist() -> Dict[str, int]:
+        return {
+            "END_OF_FUNCTION": 0,
+            "NULL": 0,
+            "AUTOMATIC": 0,
+            "EXTERNAL": 0,
+            "STATIC": 0,
+            "REGISTER": 0,
+            "EXTERNAL_DEF": 0,
+            "LABEL": 0,
+            "UNDEFINED_LABEL": 0,
+            "MEMBER_OF_STRUCT": 0,
+            "UNION_TAG": 0,
+            "TYPE_DEFINITION": 0,
+            "UDEFINED_STATIC": 0,
+            "ENUM_TAG": 0,
+            "MEMBER_OF_ENUM": 0,
+            "REGISTER_PARAM": 0,
+            "BIT_FIELD": 0,
+            "BLOCK": 0,
+            "FUNCTION": 0,
+            "END_OF_STRUCT": 0,
+            "FILE": 0,
+            "SECTION": 0,
+            "WEAK_EXTERNAL": 0,
+            "CLR_TOKEN": 0,
+            "Out of range": 0,
+        }
+
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
+        if self.ver == 2020:
+            raise NotSupported(self.ver, self.__class__.__name__)
+        super(FeatureExtractor, self).__init__()
+
+    @staticmethod
+    def pair_with_symbol_name(
+        symbols: List[dict], record_name: str
+    ) -> List[Tuple[str, int]]:
+        return [(symbol["name"], symbol[record_name]) for symbol in symbols]
+
+    def extract_raw_features(self, raw_json: dict) -> dict:
+        if self.feature_name in raw_json.keys():
+            symbols = raw_json[self.feature_name]
+        else:
+            symbols = list()
+
+        base_type_hist = self.make_base_type_hist()
+        complex_type_hist = self.make_complex_type_hist()
+        storage_class_hist = self.make_storage_class_hist()
+
+        for symbol in symbols:
+            base_type_hist[symbol["base_type"]] += 1
+            complex_type_hist[symbol["complex_type"]] += 1
+            storage_class_hist[symbol["storage_class"]] += 1
+
+        return {
+            "base_type": base_type_hist,
+            "complex_type": complex_type_hist,
+            "storage_class": storage_class_hist,
+            "numberof_aux_symbols": self.pair_with_symbol_name(
+                symbols, "numberof_aux_symbols"
             ),
-            # NOTE: extracted but not converted to feature vector
-            **self.extract_raw_features_from_signer_info(signer_info),
-            # NOTE: extracted but not converted to feature vector
-            **self.extract_raw_features_from_authenticated_attributres(
-                make_defaultdict_from_dict_elem(
-                    signer_info, "authenticated_attributes"
-                )
+            "section_number": self.pair_with_symbol_name(
+                symbols, "section_number"
             ),
-            # NOTE: extracted but not converted to feature vector
-            "signer_info_issuer": signer_info["issuer"],
-            # TODO: make feature vector from certificates array
-            "certificates": signature["certificates"],
+            "size": self.pair_with_symbol_name(symbols, "size"),
+            "value": self.pair_with_symbol_name(symbols, "value"),
         }
 
     def vectorize_features(
         self, raw_features: dict
     ) -> Tuple[List[str], np.ndarray]:
-        features_selected = ["version"]
+        features_selected = [
+            "base_type",
+            "complex_type",
+            "storage_class",
+            "numberof_aux_symbols",
+            "section_number",
+            "size",
+            "value",
+        ]
+        post_process_funcs = {
+            "base_type": lambda x: list(x.values()),
+            "complex_type": lambda x: list(x.values()),
+            "storage_class": lambda x: list(x.values()),
+            "numberof_aux_symbols": lambda x: vectorize_with_feature_hasher(
+                x, 50
+            ),
+            "section_number": lambda x: vectorize_with_feature_hasher(x, 50),
+            "size": lambda x: vectorize_with_feature_hasher(x, 50),
+            "value": lambda x: vectorize_with_feature_hasher(x, 50),
+        }
         return vectorize_selected_features(
-            raw_features, features_selected, {}, self.feature_name
+            raw_features,
+            features_selected,
+            post_process_funcs,
+            self.feature_name,
         )
 
 
@@ -1282,7 +1479,8 @@ class ProcessHeapFlags(Enum):
 class LoadConfigurationFeatureExtractor(FeatureExtractor):
     feature_name: str = "load_configuration"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
@@ -1488,25 +1686,28 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
 class LiefFeatureExtractor(FeatureExtractor):
     feature_name = "lief"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
         super(FeatureExtractor, self).__init__()
-        self.extractors = (
-            DosHeaderFeatureExtractor(),
-            RichHeaderFeatureExtractor(),
-            HeaderFeatureExtractor(),
-            OptionalHeaderFeatureExtractor(),
-            DataDirectoriesFeatureExtractor(),
-            SectionsFeatureExtractor(),
-            RelocationsFeatureExtractor(),
-            TlsFeatureExtractor(),
-            ExportFeatureExtractor(),
-            # DebugFeatureExtractor(), # DebugFeature is currently not supported
-            ImportsFeatureExtractor(),
-            ResourcesTreeFeatureExtractor(),
-            ResourcesManagerFeatureExtractor(),
-            SignatureFeatureExtractor(),
-            LoadConfigurationFeatureExtractor(),
-        )
+        self.ver = ver_str_to_int(ver)
+        self.extractors = [
+            DosHeaderFeatureExtractor(ver),
+            RichHeaderFeatureExtractor(ver),
+            HeaderFeatureExtractor(ver),
+            OptionalHeaderFeatureExtractor(ver),
+            DataDirectoriesFeatureExtractor(ver),
+            SectionsFeatureExtractor(ver),
+            RelocationsFeatureExtractor(ver),
+            TlsFeatureExtractor(ver),
+            ExportFeatureExtractor(ver),
+            # DebugFeatureExtractor(ver), # DebugFeature is currently not supported
+            ImportsFeatureExtractor(ver),
+            ResourcesTreeFeatureExtractor(ver),
+            ResourcesManagerFeatureExtractor(ver),
+            SignatureFeatureExtractor(ver),
+            LoadConfigurationFeatureExtractor(ver),
+        ]
+        if self.ver >= 2021:
+            self.extractors.append(SymbolsFeatureExtractor(ver))
 
     def extract_raw_features(self, raw_json: dict) -> dict:
         raw_features = {

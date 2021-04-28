@@ -8,3 +8,8 @@ __pycache__
 dist
 *.pickle
 node_modules
+.python-version
+.devcontainer
+tests/test_*
+!tests/test_*.py
+tests/test-files/

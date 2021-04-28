@@ -3,7 +3,8 @@ docs_dir: src
 site_dir: ../docs
 
 nav:
-  - Introduction: 'index.md'
-  - Motivation: 'motivation.md'
-  - Basic Usage: 'basic_usage.md'
-  - Advanced Usage: 'advanced_usage.md'
+  - Introduction: "index.md"
+  - Motivation: "motivation.md"
+  - Basic Usage: "basic_usage.md"
+  - Advanced Usage: "advanced_usage.md"
+  - Development: "development.md"

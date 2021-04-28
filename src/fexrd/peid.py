@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 from typing import Dict, List, Tuple
 
@@ -10,13 +10,15 @@ from .utils import (
     make_onehot_from_str_keys,
     vectorize_selected_features,
     vectorize_with_feature_hasher,
+    ver_str_to_int,
 )
 
 
 class PeidFeatureExtractor(FeatureExtractor):
     feature_name = "peid"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod

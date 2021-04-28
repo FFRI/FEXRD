@@ -1,33 +1,41 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
+
 import csv
 import glob
 import json
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 import pytest
+
 from fexrd import OptionalHeaderFeatureExtractor
 
 target_test_json: List[str] = glob.glob(
-    os.path.join(os.path.abspath(os.path.splitext(__file__)[0]), "*.json")
+    os.path.join(os.path.abspath(os.path.splitext(__file__)[0]), "*", "*.json")
 )
 
 
-@pytest.fixture
-def feature_extractor() -> OptionalHeaderFeatureExtractor:
-    return OptionalHeaderFeatureExtractor()
+def get_ver_str(path: str) -> str:
+    return path.split("/")[-2]
+
+
+def make_feature_extractor(
+    ver_str: str,
+) -> Optional[OptionalHeaderFeatureExtractor]:
+    return OptionalHeaderFeatureExtractor(ver_str)
 
 
 @pytest.mark.parametrize("test_json", target_test_json)
-def test_get_features(
-    feature_extractor: OptionalHeaderFeatureExtractor,
-    test_json: str,
-    datadir: Path,
-) -> None:
+def test_get_features(test_json: str, datadir: Path) -> None:
+    ver_str = get_ver_str(test_json)
+    feature_extractor = make_feature_extractor(ver_str)
+    if feature_extractor is None:
+        return
+
     ref_data: str = str(
         datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv"
     )
@@ -45,11 +53,12 @@ def test_get_features(
 
 
 @pytest.mark.parametrize("test_json", target_test_json)
-def test_extract_raw_features(
-    feature_extractor: OptionalHeaderFeatureExtractor,
-    test_json: str,
-    datadir: Path,
-) -> None:
+def test_extract_raw_features(test_json: str, datadir: Path) -> None:
+    ver_str = get_ver_str(test_json)
+    feature_extractor = make_feature_extractor(ver_str)
+    if feature_extractor is None:
+        return
+
     ref_data: str = str(
         datadir / f"{os.path.splitext(test_json)[0]}_ref_raw.txt"
     )

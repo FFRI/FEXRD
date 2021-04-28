@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 
 import glob
@@ -9,9 +9,10 @@ import pickle
 
 import lightgbm as lgb
 import pandas as pd
-from fexrd import AllFeaturesExtractor
 from sklearn.metrics import auc, roc_curve
 from sklearn.model_selection import train_test_split
+
+from fexrd import AllFeaturesExtractor
 
 
 def classify(df: pd.DataFrame) -> None:
@@ -47,9 +48,9 @@ def _main() -> None:
     # please comment out the "fe = AllFeaturesExtractor()" line and uncomment the "fe = StringsFeatureExtractor()" line.
     # Don't forget to import a new feature extractor class when uncommenting.
 
-    fe = AllFeaturesExtractor()
-    # fe = StringsFeatureExtractor()
-    # fe = LiefFeatureExtractor()
+    fe = AllFeaturesExtractor("v2020")
+    # fe = StringsFeatureExtractor("v2020")
+    # fe = LiefFeatureExtractor("v2020")
 
     cache_fname = f"{fe.feature_name}_cache.pickle"
 

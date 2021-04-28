@@ -45,6 +45,9 @@
                             <li class="navitem">
                                 <a href="../advanced_usage/" class="nav-link">Advanced Usage</a>
                             </li>
+                            <li class="navitem">
+                                <a href="../development/" class="nav-link">Development</a>
+                            </li>
                         </ul>
 
                     <ul class="nav navbar-nav ml-auto">
@@ -91,6 +94,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-level="2"><a href="#command-line-interface" class="nav-link">Command Line Interface</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-level="2"><a href="#more-practical-usage-examples" class="nav-link">More Practical Usage Examples</a>
               <ul class="nav flex-column">
               </ul>
@@ -120,13 +127,15 @@
 <li>imports</li>
 <li>resources_tree (work in progress)</li>
 <li>resources_manager</li>
-<li>signature</li>
+<li>signatures (signature for FFRI Dataset 2020)</li>
 <li>load_configuration</li>
 </ul>
 </li>
 <li>peid</li>
 <li>trid</li>
 <li>strings</li>
+<li>die</li>
+<li>Manalyze</li>
 </ul>
 <p>The feature extraction classes corresponding to each of the above keys are as follows.</p>
 <ul>
@@ -144,13 +153,15 @@
 <li>ImportsFeatureExtractor: imports</li>
 <li>ResourcesTreeFeatureExtractor: resources_tree</li>
 <li>ResourcesManagerFeatureExtractor: resources_manager</li>
-<li>SignatureFeatureExtractor: signature</li>
+<li>SignatureFeatureExtractor: signatures (signature for FFRI Dataset 2020)</li>
 <li>LoadConfigurationFeatureExtractor: load_configuration</li>
 </ul>
 </li>
 <li>PeidFeatureExtractor: peid</li>
 <li>TridFeatureExtractor: trid</li>
 <li>StringsFeatureExtractor: strings</li>
+<li>DieFeatureExtractor: die</li>
+<li>Manalyze: manalyze_plugin_packer</li>
 </ul>
 <p>In addition to the above feature extraction classes, we also provide AllFeaturesExtractor. This can be used to create a vector that combines all the above feature extraction classes' outputs.</p>
 <h2 id="usage-example">Usage Example</h2>
@@ -168,6 +179,87 @@ for l in fin.readlines():
 <p>In the above example, <code>StringsFeatureExtractor</code> is instantiated, and the "string" element is passed as an argument to the <code>get_features</code> method to get the vector.</p>
 <p>The return value of the <code>get_features</code> method is a tuple, where the 0th element is the column name of the vector and the 1st element is the vector.</p>
 <p>The same is true for converting the element corresponding to the key other than "strings" into a vector.</p>
+<h2 id="command-line-interface">Command Line Interface</h2>
+<p>FEXRD also provides a command-line interface for debugging purposes. Two commands are currently supported.</p>
+<p>The command <code>show-raw-dict</code> shows a raw output of a specified JSON element before vectorization.</p>
+<p>The command <code>show-vec</code> shows a feature vector of a specified JSON element.</p>
+<pre><code>$ python -m fexrd show-raw-dict --help
+Usage: __main__.py show-raw-dict [OPTIONS] INPUT_JSON VER_STR EXTRACTOR_NAME
+
+Arguments:
+  INPUT_JSON      [required]
+  VER_STR         [required]
+  EXTRACTOR_NAME  Show an output of extract_raw_feature method. Available
+                  feature names are:  lief, dos_header, rich_header, header,
+                  optional_header, data_directories, sections, relocations,
+                  tls, export, debug, imports, resources_tree,
+                  resources_manager, signatures, load_configuration, peid,
+                  trid, strings, all, die, manalyze_plugin_packer  [required]
+
+$ python -m fexrd show-vec --help
+Usage: __main__.py show-vec [OPTIONS] INPUT_JSON VER_STR EXTRACTOR_NAME
+
+Arguments:
+  INPUT_JSON      [required]
+  VER_STR         [required]
+  EXTRACTOR_NAME  Show an output of vectorize_features. Available feature
+                  names are: lief, dos_header, rich_header, header,
+                  optional_header, data_directories, sections, relocations,
+                  tls, export, debug, imports, resources_tree,
+                  resources_manager, signatures, load_configuration, peid,
+                  trid, strings, all, die, manalyze_plugin_packer  [required]
+
+
+Options:
+  --help  Show this message and exit.
+</code></pre>
+<p>Here, we show some usage examples.</p>
+<pre><code>$ python -m fexrd show-vec ./tests/test_regression_test/v2021/01340ff69f0c627a5f1cba2b82a59ef90b1a61ecb8078e183dc3e5d4abc847e9.json v2021 dos_header
+dos_header_addressof_new_exeheader,dos_header_addressof_relocation_table,dos_header_checksum,dos_header_file_size_in_pages,dos_header_header_size_in_paragraphs,dos_header_initial_ip,dos_header_initial_relative_cs,dos_header_initial_relative_ss,dos_header_initial_sp,dos_header_magic,dos_header_maximum_extra_paragraphs,dos_header_minimum_extra_paragraphs,dos_header_numberof_relocation,dos_header_oem_id,dos_header_oem_info,dos_header_overlay_number,dos_header_reserved[0],dos_header_reserved[1],dos_header_reserved[2],dos_header_reserved[3],dos_header_reserved2[0],dos_header_reserved2[1],dos_header_reserved2[2],dos_header_reserved2[3],dos_header_reserved2[4],dos_header_reserved2[5],dos_header_reserved2[6],dos_header_reserved2[7],dos_header_reserved2[8],dos_header_reserved2[9],dos_header_used_bytes_in_the_last_page
+16843152.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,23117.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0,37008.0
+$ python -m fexrd show-raw-dict ./tests/test_regression_test/v2021/01340ff69f0c627a5f1cba2b82a59ef90b1a61ecb8078e183dc3e5d4abc
+847e9.json v2021 dos_header
+{
+  &quot;addressof_new_exeheader&quot;: 16843152,
+  &quot;addressof_relocation_table&quot;: 37008,
+  &quot;checksum&quot;: 37008,
+  &quot;file_size_in_pages&quot;: 37008,
+  &quot;header_size_in_paragraphs&quot;: 37008,
+  &quot;initial_ip&quot;: 37008,
+  &quot;initial_relative_cs&quot;: 37008,
+  &quot;initial_relative_ss&quot;: 37008,
+  &quot;initial_sp&quot;: 37008,
+  &quot;magic&quot;: 23117,
+  &quot;maximum_extra_paragraphs&quot;: 37008,
+  &quot;minimum_extra_paragraphs&quot;: 37008,
+  &quot;numberof_relocation&quot;: 37008,
+  &quot;oem_id&quot;: 37008,
+  &quot;oem_info&quot;: 37008,
+  &quot;overlay_number&quot;: 37008,
+  &quot;reserved&quot;: [
+    37008,
+    37008,
+    37008,
+    37008
+  ],
+  &quot;reserved2&quot;: [
+    37008,
+    37008,
+    37008,
+    37008,
+    37008,
+    37008,
+    37008,
+    37008,
+    37008,
+    37008
+  ],
+  &quot;used_bytes_in_the_last_page&quot;: 37008
+}
+</code></pre>
+<p>Additionally, you can use Docker for the CLI.</p>
+<pre><code>docker-compose -f .\docker-compose.production.yml run app python -m fexrd show-raw-dict --help
+</code></pre>
 <h2 id="more-practical-usage-examples">More Practical Usage Examples</h2>
 <p>The <a href="https://github.com/FFRI/FEXRD/tree/master/example">example</a> directory contains more practical usage examples.</p></div>
             </div>

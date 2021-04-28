@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 
 from collections import defaultdict
@@ -113,3 +113,7 @@ def vectorize_selected_features(
         [make_column(f, v) for f, v in zip(features_selected, vectors)],
     )
     return columns, np.hstack(vectors).astype(np.float32)
+
+
+def ver_str_to_int(s: str) -> int:
+    return int(s[1:])

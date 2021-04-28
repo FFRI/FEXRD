@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
 #
 from statistics import mean
 from typing import List, Tuple
@@ -7,13 +7,14 @@ from typing import List, Tuple
 import numpy as np
 
 from .feature_extractor import FeatureExtractor
-from .utils import vectorize_selected_features
+from .utils import vectorize_selected_features, ver_str_to_int
 
 
 class StringsFeatureExtractor(FeatureExtractor):
     feature_name = "strings"
 
-    def __init__(self) -> None:
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
