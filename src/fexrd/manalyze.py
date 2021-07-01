@@ -80,7 +80,8 @@ class ManalyzeDetectionReason(Enum):
             return ManalyzeDetectionReason.HIGH_ENTROPY
         elif ManalyzeDetectionReason.determined_possibly_packed(msg):
             return ManalyzeDetectionReason.POSSIBLY_PACKED
-        return None
+        else:
+            return None
 
 
 class ManalyzeFeatureExtractor(FeatureExtractor):
@@ -102,13 +103,21 @@ class ManalyzeFeatureExtractor(FeatureExtractor):
                 if category is not None:
                     plugin_output_categories[str(category)] = 1
                 else:
-                    print("Unknown Manalyze output", file=sys.stderr)
-            if "summary" in raw_json.keys():
-                plugin_output_categories[
-                    str(
-                        ManalyzeDetectionReason.msg_to_enum(raw_json["summary"])
+                    print(
+                        f"Unknown Manalyze output {raw_json['summary']}",
+                        file=sys.stderr,
                     )
-                ] = 1
+            if "summary" in raw_json.keys():
+                category = ManalyzeDetectionReason.msg_to_enum(
+                    raw_json["summary"]
+                )
+                if category is not None:
+                    plugin_output_categories[str(category)] = 1
+                else:
+                    print(
+                        f"Unknown Manalyze summary output ({raw_json['summary']})",
+                        file=sys.stderr,
+                    )
         return {"manalyze_output": plugin_output_categories}
 
     def vectorize_features(
