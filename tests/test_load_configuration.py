@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
 #
 
 import csv
@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 from typing import List, Optional
 
+import numpy as np
 import pytest
 
 from fexrd import LoadConfigurationFeatureExtractor
@@ -41,14 +42,16 @@ def test_get_features(test_json: str, datadir: Path) -> None:
     with open(ref_data, "r") as fin:
         reader = csv.reader(fin)
         columns_ref: List[str] = next(reader)
-        feature_vector_ref: List[float] = [float(i) for i in next(reader)]
+        feature_vector_ref = np.array(
+            [float(i) if i else np.nan for i in next(reader)]
+        )
 
     with open(str(datadir / test_json), "r") as fin:
         obj = json.loads(fin.read())
     columns, feature_vector = feature_extractor.get_features(obj["lief"])
 
     assert columns == columns_ref
-    assert list(feature_vector) == pytest.approx(feature_vector_ref)
+    np.testing.assert_allclose(feature_vector, feature_vector_ref)
 
 
 @pytest.mark.parametrize("test_json", target_test_json)

@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
 #
 import json
 import sys
@@ -94,7 +94,8 @@ def feature_name_to_obj(obj: dict, ver_str: str) -> Dict[str, dict]:
         )
     }
 
-    if ver_str != "v2020":
+    ver = ver_str_to_int(ver_str)
+    if ver >= 2021:
         f_to_obj.update(
             {
                 name: obj[name]

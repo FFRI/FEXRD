@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
 #
 
 from enum import Enum
@@ -397,8 +397,8 @@ class SectionsFeatureExtractor(FeatureExtractor):
             return None
 
     # TODO: Reconsider the way to vectorize section characteristics
-    @staticmethod
     def vectorize_characteristics(
+        self,
         sections: Optional[List[dict]],
     ) -> Dict[str, int]:
         encoded_data = {
@@ -438,6 +438,9 @@ class SectionsFeatureExtractor(FeatureExtractor):
             "MEM_READ": 0,
             "MEM_WRITE": 0,
         }
+        if self.ver >= 2022:
+            encoded_data["Out of range"] = 0
+
         if sections:
             for section in sections:
                 for characteristic in section["characteristics"]:
@@ -643,28 +646,32 @@ class TlsFeatureExtractor(FeatureExtractor):
         encoded_data["has_extra_bits"] = has_extra_bits
         return encoded_data
 
-    @staticmethod
     def data_directory_to_onehot(
+        self,
         data_directory: Optional[str],
     ) -> Dict[str, int]:
+        table_keys = [
+            "EXPORT_TABLE",
+            "IMPORT_TABLE",
+            "RESOURCE_TABLE",
+            "EXCEPTION_TABLE",
+            "CERTIFICATE_TABLE",
+            "BASE_RELOCATION_TABLE",
+            "DEBUG",
+            "ARCHITECTURE",
+            "GLOBAL_PTR",
+            "TLS_TABLE",
+            "LOAD_CONFIG_TABLE",
+            "BOUND_IMPORT",
+            "IAT",
+            "DELAY_IMPORT_DESCRIPTOR",
+            "CLR_RUNTIME_HEADER",
+        ]
+        if self.ver >= 2022:
+            table_keys.append("RESERVED")
+            table_keys.append("Out of range")
         return make_onehot_from_str_keys(
-            [
-                "EXPORT_TABLE",
-                "IMPORT_TABLE",
-                "RESOURCE_TABLE",
-                "EXCEPTION_TABLE",
-                "CERTIFICATE_TABLE",
-                "BASE_RELOCATION_TABLE",
-                "DEBUG",
-                "ARCHITECTURE",
-                "GLOBAL_PTR",
-                "TLS_TABLE",
-                "LOAD_CONFIG_TABLE",
-                "BOUND_IMPORT",
-                "IAT",
-                "DELAY_IMPORT_DESCRIPTOR",
-                "CLR_RUNTIME_HEADER",
-            ],
+            table_keys,
             data_directory,
         )
 
@@ -814,6 +821,20 @@ class DebugFeatureExtractor(FeatureExtractor):
         super(FeatureExtractor, self).__init__()
 
     # TODO: vectorize debug feature
+    # def extract_raw_features(self, raw_json: dict) -> dict:
+    #     debug = _make_defaultdict_from_dict(raw_json, self.feature_name)
+    #     raw_features = dict()
+    #     return raw_features
+
+
+class DelayImportsFeatureExtractor(FeatureExtractor):
+    feature_name = "delay_imports"
+
+    def __init__(self, ver: str) -> None:
+        self.ver = ver_str_to_int(ver)
+        super(FeatureExtractor, self).__init__()
+
+    # TODO: vectorize delay_imports feature
     # def extract_raw_features(self, raw_json: dict) -> dict:
     #     debug = _make_defaultdict_from_dict(raw_json, self.feature_name)
     #     raw_features = dict()
@@ -1304,7 +1325,7 @@ class SignatureFeatureExtractor(FeatureExtractor):
                 # TODO: make feature vector from certificates array
                 "certificates": signature["certificates"],
             }
-        elif self.ver == 2021:
+        elif self.ver >= 2021:
             # TODO: extract other properties contained in raw_json["signatures"]
             return {
                 "number_of_signatures": len(raw_json["signatures"])
@@ -1322,7 +1343,7 @@ class SignatureFeatureExtractor(FeatureExtractor):
             return vectorize_selected_features(
                 raw_features, features_selected, {}, self.feature_name
             )
-        elif self.ver == 2021:
+        elif self.ver >= 2021:
             features_selected = ["number_of_signatures"]
             return vectorize_selected_features(
                 raw_features, features_selected, {}, self.feature_name
@@ -1701,6 +1722,7 @@ class LiefFeatureExtractor(FeatureExtractor):
             ExportFeatureExtractor(ver),
             # DebugFeatureExtractor(ver), # DebugFeature is currently not supported
             ImportsFeatureExtractor(ver),
+            # DelayImportsFeatureExtractor(ver), # DelayImports is currently not supported
             ResourcesTreeFeatureExtractor(ver),
             ResourcesManagerFeatureExtractor(ver),
             SignatureFeatureExtractor(ver),

@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
 #
 
 from typing import Dict, List, Tuple
@@ -27,7 +27,19 @@ class DieFeatureExtractor(FeatureExtractor):
     def extract_raw_features(self, raw_json: dict) -> Dict[str, List[str]]:
         # NOTE: Other elements (arch, filetyp, mode, type, endianess) are not used here
         # because output of lief contains the same information as these elements.
-        return {"detects": [i["string"] for i in raw_json["detects"]]}
+        if self.ver == 2021:
+            return {"detects": [i["string"] for i in raw_json["detects"]]}
+        elif self.ver == 2022:
+            if "values" in raw_json["detects"][0].keys():
+                return {
+                    "detects": [
+                        i["string"] for i in raw_json["detects"][0]["values"]
+                    ]
+                }
+            else:
+                return {"detects": []}
+        else:
+            raise NotImplementedError
 
     def vectorize_features(
         self, raw_features: dict

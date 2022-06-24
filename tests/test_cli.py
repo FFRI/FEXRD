@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2021 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
 #
 import glob
 import json
@@ -94,7 +94,7 @@ def test_show_vec(test_json: str, datadir: Path) -> None:
     ver_str = get_ver_str(test_json)
 
     for feature_name in get_available_feature_names(ver_str):
-        ref_data: Path = (
+        ref_data_path: Path = (
             datadir
             / f"{os.path.splitext(test_json)[0]}_{feature_name}_ref_feature.csv"
         )
@@ -105,12 +105,12 @@ def test_show_vec(test_json: str, datadir: Path) -> None:
             assert f"feature name: {feature_name} is not found" in result.stdout
             return
 
-        if not ref_data.exists():
+        if not ref_data_path.exists():
             assert (
                 f"key ({feature_name}) does not exist" in result.stdout
                 or f"feature name: {feature_name} is not found" in result.stdout
             )
         else:
-            assert pd.read_csv(ref_data).equals(
+            assert pd.read_csv(ref_data_path).equals(
                 pd.read_csv(StringIO(result.stdout))
             )
