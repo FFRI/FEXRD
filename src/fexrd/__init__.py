@@ -1,8 +1,8 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 
-__version__ = "v2021.2"
+__version__ = "v2023.1"
 
 from .all_features import AllFeaturesExtractor
 from .die import DieFeatureExtractor

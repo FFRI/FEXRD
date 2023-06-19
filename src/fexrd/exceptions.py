@@ -1,3 +1,8 @@
+#
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+#
+
+
 class FexrdBaseException(Exception):
     pass
 
@@ -16,7 +21,10 @@ class NotImplementedYet(FexrdBaseException):
         self.cls_name = cls_name
 
     def __str__(self) -> str:
-        return f"{self.cls_name} is not implemented for FFRI Dataset version v{self.ver}"
+        return (
+            f"{self.cls_name} is not implemented for FFRI Dataset version"
+            f" v{self.ver}"
+        )
 
 
 class NotSupported(FexrdBaseException):
@@ -25,4 +33,7 @@ class NotSupported(FexrdBaseException):
         self.cls_name = cls_name
 
     def __str__(self) -> str:
-        return f"{self.cls_name} is not supported for FFRI Dataset version v{self.ver}"
+        return (
+            f"{self.cls_name} is not supported for FFRI Dataset version"
+            f" v{self.ver}"
+        )

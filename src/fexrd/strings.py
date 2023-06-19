@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 from statistics import mean
 from typing import List, Tuple
@@ -21,8 +21,10 @@ class StringsFeatureExtractor(FeatureExtractor):
     def make_char_histogram(strings: List[str]) -> np.ndarray:
         if strings:
             # calculate the frequency of occurrence of each character
-            # counted only for the ASCII character set whose code is in [0x20, 0x7e]
-            # each code is subtracted by 0x20 to fit the range of bins in [0x0, 0x7e - 0x20]
+            # counted only for the ASCII character set whose code is in
+            # [0x20, 0x7e]
+            # each code is subtracted by 0x20 to fit the range of bins in
+            # [0x0, 0x7e - 0x20]
             char_counts = np.bincount(
                 [
                     ord(c) - 0x20
@@ -63,10 +65,14 @@ class StringsFeatureExtractor(FeatureExtractor):
     def count_number_of_paths(strings: List[str]) -> int:
         return sum("C:\\" in s for s in strings)
 
-    def extract_raw_features(self, raw_str_list: List[str]) -> List[str]:  # type: ignore
+    def extract_raw_features(  # type: ignore
+        self, raw_str_list: List[str]
+    ) -> List[str]:
         return raw_str_list
 
-    def vectorize_features(self, strings: List[str]) -> Tuple[List[str], np.ndarray]:  # type: ignore
+    def vectorize_features(  # type: ignore
+        self, strings: List[str]
+    ) -> Tuple[List[str], np.ndarray]:
         char_hist = self.make_char_histogram(strings)
         processed_features = {
             "char_hist": char_hist,

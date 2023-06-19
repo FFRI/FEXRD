@@ -1,6 +1,6 @@
-# Welcome to FEXRD documentation
+# Welcome to FEXRD
 
-Feature EXtractor for FFRI Dataset (FEXRD) is a library to make feature vectors from FFRI Dataset.
+Feature EXtractor for FFRI Dataset (FEXRD) makes it easier for you to preprocess the FFRI Dataset.
 
 This document explains the motivation, basic usage and advanced usage of FEXRD.
 

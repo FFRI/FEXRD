@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 
 import glob
@@ -45,7 +45,8 @@ def _main() -> None:
 
     # NOTE: Choose one of the following feature extractor class.
     # If you want to use strings feature only,
-    # please comment out the "fe = AllFeaturesExtractor()" line and uncomment the "fe = StringsFeatureExtractor()" line.
+    # please comment out the "fe = AllFeaturesExtractor()" line and
+    # uncomment the "fe = StringsFeatureExtractor()" line.
     # Don't forget to import a new feature extractor class when uncommenting.
 
     fe = AllFeaturesExtractor("v2020")
@@ -60,7 +61,8 @@ def _main() -> None:
     labels = list()
 
     print(
-        f"Now load file from {data_dir_in}/non_packed.jsonl and {data_dir_in}/packed/*.jsonl"
+        f"Now load file from {data_dir_in}/non_packed.jsonl and "
+        f"{data_dir_in}/packed/*.jsonl"
     )
     print("It takes 3 or 5 minutes.")
 

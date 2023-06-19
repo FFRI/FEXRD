@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 
 from typing import Dict, List, Tuple
@@ -29,7 +29,7 @@ class DieFeatureExtractor(FeatureExtractor):
         # because output of lief contains the same information as these elements.
         if self.ver == 2021:
             return {"detects": [i["string"] for i in raw_json["detects"]]}
-        elif self.ver == 2022:
+        elif self.ver == 2022 or self.ver == 2023:
             if "values" in raw_json["detects"][0].keys():
                 return {
                     "detects": [

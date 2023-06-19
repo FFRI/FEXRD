@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 
 from typing import List, Tuple
@@ -23,7 +23,7 @@ class AllFeaturesExtractor(FeatureExtractor):
     def __init__(self, ver: str) -> None:
         super(FeatureExtractor, self).__init__()
         self.ver = ver_str_to_int(ver)
-        if not (2020 <= self.ver <= 2022):
+        if not (2020 <= self.ver <= 2023):
             raise InvalidVersion(self.ver)
 
         extractors_dict = {

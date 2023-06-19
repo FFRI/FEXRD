@@ -1,3 +1,7 @@
+#
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+#
+
 import glob
 import os
 import shutil

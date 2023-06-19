@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 
 import sys
@@ -115,7 +115,10 @@ class ManalyzeFeatureExtractor(FeatureExtractor):
                     plugin_output_categories[str(category)] = 1
                 else:
                     print(
-                        f"Unknown Manalyze summary output ({raw_json['summary']})",
+                        (
+                            "Unknown Manalyze summary output"
+                            f" ({raw_json['summary']})"
+                        ),
                         file=sys.stderr,
                     )
         return {"manalyze_output": plugin_output_categories}

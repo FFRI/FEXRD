@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 import json
 import sys
@@ -142,7 +142,10 @@ def show_raw_dict(
     ver_str: str,
     extractor_name: str = typer.Argument(
         ...,
-        help=f'Show an output of extract_raw_feature method. Available feature names are:\n {", ".join(feature_name_to_extractor(None).keys())}',
+        help=(
+            "Show an output of extract_raw_feature method. Available feature"
+            f" names are:\n {', '.join(feature_name_to_extractor(None).keys())}"
+        ),
     ),
 ) -> None:
     f_to_e = feature_name_to_extractor(ver_str)
@@ -176,7 +179,10 @@ def show_vec(
     ver_str: str,
     extractor_name: str = typer.Argument(
         ...,
-        help=f'Show an output of vectorize_features. Available feature names are: {", ".join(feature_name_to_extractor(None).keys())}',
+        help=(
+            "Show an output of vectorize_features. Available feature names"
+            f" are: {', '.join(feature_name_to_extractor(None).keys())}"
+        ),
     ),
 ) -> None:
     f_to_e = feature_name_to_extractor(ver_str)

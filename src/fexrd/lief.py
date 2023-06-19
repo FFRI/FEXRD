@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2022 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
 #
 
 from enum import Enum
@@ -960,8 +960,10 @@ class ImportsFeatureExtractor(FeatureExtractor):
         )
 
 
-# NOTE: In LIEF 0.11 or later, dict structure of resources_tree is different from 0.10.1 one.
-# TODO: When updating LIEF version 0.10.1 to 0.11, the extract_raw_features should be modified.
+# NOTE: In LIEF 0.11 or later, dict structure of resources_tree is
+#       different from 0.10.1 one.
+# TODO: When updating LIEF version 0.10.1 to 0.11,
+#       the extract_raw_features should be modified.
 class ResourcesTreeFeatureExtractor(FeatureExtractor):
     feature_name = "resources_tree"
 
@@ -1114,7 +1116,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             f"{prefix}_{cprefix}_file_version_LS": fixed_file_info[
                 "file_version_LS"
             ],
-            f"{prefix}_{cprefix}_file_flags_mask": self.fixed_version_file_flags_to_onehot(
+            f"{prefix}_{cprefix}_file_flags_mask": self.fixed_version_file_flags_to_onehot(  # noqa: E501
                 fixed_file_info["file_flags_mask"]
             ),
             f"{prefix}_{cprefix}_file_flags": self.fixed_version_file_flags_to_onehot(
@@ -1126,7 +1128,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             f"{prefix}_{cprefix}_file_type": self.fixed_version_file_type_to_onehot(
                 fixed_file_info["file_type"]
             ),
-            f"{prefix}_{cprefix}_file_subtype": self.fixed_version_file_subtype_to_onehot(
+            f"{prefix}_{cprefix}_file_subtype": self.fixed_version_file_subtype_to_onehot(  # noqa: E501
                 fixed_file_info["file_subtype"]
             ),
             f"{prefix}_{cprefix}_file_date_MS": fixed_file_info["file_date_MS"],
@@ -1139,7 +1141,8 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
         prefix = "version"
         cprefix = "string_file_info"
         # TODO: convert langcode_items array to feature vector
-        # langcode_items = _make_defaultdict_from_dict(string_file_info, "lang_code_item")
+        # langcode_items = _make_defaultdict_from_dict(
+        #                       string_file_info, "lang_code_item")
 
         return {
             f"{prefix}_{cprefix}_type": string_file_info["type"],
@@ -1159,7 +1162,8 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             f"{prefix}_{cprefix}_key": int(
                 var_file_info["key"] == "VarFileInfo"
             ),
-            # f"{prefix}_{cprefix}_translations": self.translations_to_featurevector(var_file_info["translations"])
+            # f"{prefix}_{cprefix}_translations":
+            #       self.translations_to_featurevector(var_file_info["translations"])
         }
 
     def extract_raw_features(self, raw_json: dict) -> dict:
@@ -1722,7 +1726,8 @@ class LiefFeatureExtractor(FeatureExtractor):
             ExportFeatureExtractor(ver),
             # DebugFeatureExtractor(ver), # DebugFeature is currently not supported
             ImportsFeatureExtractor(ver),
-            # DelayImportsFeatureExtractor(ver), # DelayImports is currently not supported
+            # DelayImportsFeatureExtractor(ver), # DelayImports is
+            # currently not supported
             ResourcesTreeFeatureExtractor(ver),
             ResourcesManagerFeatureExtractor(ver),
             SignatureFeatureExtractor(ver),
