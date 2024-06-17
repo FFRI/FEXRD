@@ -37,9 +37,7 @@ def test_get_features(
     if feature_extractor is None:
         return
 
-    ref_data: str = str(
-        datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv"
-    )
+    ref_data: str = str(datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv")
     with open(ref_data, "r") as fin:
         reader = csv.reader(fin)
         columns_ref: List[str] = next(reader)
@@ -63,9 +61,7 @@ def test_extract_raw_features(
     if feature_extractor is None:
         return
 
-    ref_data: str = str(
-        datadir / f"{os.path.splitext(test_json)[0]}_ref_raw.txt"
-    )
+    ref_data: str = str(datadir / f"{os.path.splitext(test_json)[0]}_ref_raw.txt")
     with open(ref_data, "r") as fin:
         obj_ref = json.loads(fin.read())
 

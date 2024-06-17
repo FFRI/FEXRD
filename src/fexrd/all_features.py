@@ -55,9 +55,7 @@ class AllFeaturesExtractor(FeatureExtractor):
         raw_features["file_size"] = raw_json["file_size"]
         return raw_features
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         columns: List[str] = ["file_size"]
         vectors: List[np.ndarray] = [
             raw_features["file_size"],

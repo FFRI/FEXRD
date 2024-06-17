@@ -68,12 +68,9 @@ def test_show_dict(test_json: str, datadir: Path) -> None:
 
     for feature_name in get_available_feature_names(ver_str):
         ref_data: Path = (
-            datadir
-            / f"{os.path.splitext(test_json)[0]}_{feature_name}_ref_raw.txt"
+            datadir / f"{os.path.splitext(test_json)[0]}_{feature_name}_ref_raw.txt"
         )
-        result = runner.invoke(
-            app, ["show-raw-dict", test_json, ver_str, feature_name]
-        )
+        result = runner.invoke(app, ["show-raw-dict", test_json, ver_str, feature_name])
         if feature_name == "dummy":
             assert f"feature name: {feature_name} is not found" in result.stdout
             return
@@ -95,12 +92,9 @@ def test_show_vec(test_json: str, datadir: Path) -> None:
 
     for feature_name in get_available_feature_names(ver_str):
         ref_data_path: Path = (
-            datadir
-            / f"{os.path.splitext(test_json)[0]}_{feature_name}_ref_feature.csv"
+            datadir / f"{os.path.splitext(test_json)[0]}_{feature_name}_ref_feature.csv"
         )
-        result = runner.invoke(
-            app, ["show-vec", test_json, ver_str, feature_name]
-        )
+        result = runner.invoke(app, ["show-vec", test_json, ver_str, feature_name])
         if feature_name == "dummy":
             assert f"feature name: {feature_name} is not found" in result.stdout
             return

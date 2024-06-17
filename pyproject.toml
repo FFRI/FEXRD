@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fexrd"
-version = "v2023.1"
+version = "v2024.1"
 description = "Feature EXtractor for FFRI Dataset"
 license = "Apache-2.0"
 readme = "README.md"
@@ -12,53 +12,28 @@ keywords = ["Malware", "FFRI Dataset", "Machine Learning"]
 packages = [{include = "fexrd", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
-lief = "^0.13.0"
-pandas = "^2.0.0"
-scikit-learn = "^1.2.2"
-typer = "^0.7.0"
-lightgbm = "^3.3.5"
-beautifulsoup4 = "^4.12.2"
+python = "^3.12"
+lief = "^0.14.1"
+pandas = "^2.2.2"
+scikit-learn = "^1.4.2"
+typer = "^0.12.3"
+lightgbm = "^4.3.0"
+beautifulsoup4 = "^4.12.3"
 
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.0.261"
-black = "^23.3.0"
-mypy = "^1.2.0"
-pytest = "^7.3.1"
-pytest-datadir = "^1.4.1"
-pre-commit = "^3.2.2"
-gitpython = "^3.1.31"
-pandas-stubs = "^2.0.0.230412"
-types-beautifulsoup4 = "^4.12.0.3"
+ruff = "^0.4.4"
+mypy = "^1.10.0"
+pytest = "^8.2.0"
+pytest-datadir = "^1.5.0"
+pre-commit = "^3.7.1"
+gitpython = "^3.1.43"
+pandas-stubs = "^2.2.2.240514"
+types-beautifulsoup4 = "^4.12.0.20240511"
 
 
 [tool.poetry.group.docs.dependencies]
-mkdocs = "^1.4.2"
-
-
-[tool.black]
-line-length = 80
-
-
-[tool.mypy]
-python_version = 3.8
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-mypy_path = "./stubs"
-
-[[tool.mypy.overrides]]
-module = [
-    "pytest",
-    "numpy",
-    "pandas",
-    "lief",
-    "tests",
-    "lightgbm",
-    "sklearn.*"
-]
-ignore_missing_imports = true
-
+mkdocs = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core"]

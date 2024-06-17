@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 from typing import Dict, List, Tuple
 
@@ -32,18 +32,14 @@ class PeidFeatureExtractor(FeatureExtractor):
             "Packed": int(raw_json["Packed"] == "yes"),
             "Anti-Debug": self.ternary_to_onehot(raw_json["Anti-Debug"]),
             "GUI Program": self.ternary_to_onehot(raw_json["GUI Program"]),
-            "Console Program": self.ternary_to_onehot(
-                raw_json["Console Program"]
-            ),
+            "Console Program": self.ternary_to_onehot(raw_json["Console Program"]),
             "contains base64": int(raw_json["contains base64"] == "yes"),
             "AntiDebug": raw_json["AntiDebug"],
             "mutex": int(raw_json["mutex"] == "yes"),
             "PEiD": raw_json["PEiD"],
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "PE",
             "DLL",

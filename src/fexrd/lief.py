@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 
 from enum import Enum
@@ -15,6 +15,7 @@ from .feature_extractor import FeatureExtractor
 from .utils import (
     make_defaultdict_from_dict_elem,
     make_onehot_dict_from_bitflag,
+    make_onehot_dict_from_bitflag_for_characteristics_to_onehot_2023,
     make_onehot_from_str_keys,
     vectorize_selected_features,
     vectorize_with_feature_hasher,
@@ -38,9 +39,7 @@ class RichHeaderFeatureExtractor(FeatureExtractor):
         super(FeatureExtractor, self).__init__()
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        rich_header = make_defaultdict_from_dict_elem(
-            raw_json, self.feature_name
-        )
+        rich_header = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
 
         if rich_header["entries"]:
             # list of (comp.id, count)
@@ -59,9 +58,7 @@ class RichHeaderFeatureExtractor(FeatureExtractor):
             "entries": entries,
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = ["key", "entries"]
         post_process_funcs = {
             "entries": lambda x: vectorize_with_feature_hasher(x, 50),
@@ -99,7 +96,29 @@ class HeaderFeatureExtractor(FeatureExtractor):
         return encoded_data
 
     @staticmethod
-    def characteristics_to_onehot(chracteristics: int) -> Dict[str, int]:
+    def characteristics_to_onehot(ver: int, chracteristics: int) -> Dict[str, int]:
+        if ver < 2024:
+            return make_onehot_dict_from_bitflag_for_characteristics_to_onehot_2023(
+                [
+                    "RELOCS_STRIPPED",
+                    "EXECUTABLE_IMAGE",
+                    "LINE_NUMS_STRIPPED",
+                    "LOCAL_SYMS_STRIPPED",
+                    "AGGRESSIVE_WS_TRIM",
+                    "LARGE_ADDRESS_AWARE",
+                    "BYTES_REVERSED_LO",
+                    "CHARA_32BIT_MACHINE",
+                    "DEBUG_STRIPPED",
+                    "REMOVABLE_RUN_FROM_SWAP",
+                    "NET_RUN_FROM_SWAP",
+                    "SYSTEM",
+                    "DLL",
+                    "UP_SYSTEM_ONLY",
+                    "BYTES_REVERSED_HI",
+                ],
+                chracteristics,
+                lief.PE.Header.CHARACTERISTICS,
+            )
         return make_onehot_dict_from_bitflag(
             [
                 "RELOCS_STRIPPED",
@@ -109,7 +128,7 @@ class HeaderFeatureExtractor(FeatureExtractor):
                 "AGGRESSIVE_WS_TRIM",
                 "LARGE_ADDRESS_AWARE",
                 "BYTES_REVERSED_LO",
-                "CHARA_32BIT_MACHINE",
+                "NEED_32BIT_MACHINE",
                 "DEBUG_STRIPPED",
                 "REMOVABLE_RUN_FROM_SWAP",
                 "NET_RUN_FROM_SWAP",
@@ -119,7 +138,7 @@ class HeaderFeatureExtractor(FeatureExtractor):
                 "BYTES_REVERSED_HI",
             ],
             chracteristics,
-            lief.PE.HEADER_CHARACTERISTICS,
+            lief.PE.Header.CHARACTERISTICS,
         )
 
     def extract_raw_features(
@@ -135,13 +154,11 @@ class HeaderFeatureExtractor(FeatureExtractor):
             "pointerto_symbol_table": header["pointerto_symbol_table"],
             "sizeof_optional_header": header["sizeof_optional_header"],
             "characteristics": self.characteristics_to_onehot(
-                header["characteristics"]
+                self.ver, header["characteristics"]
             ),
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "signature",
             "machine",
@@ -222,20 +239,14 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
         return encoded_data
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        optional_header = make_defaultdict_from_dict_elem(
-            raw_json, self.feature_name
-        )
+        optional_header = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
         return {
             "magic": int(optional_header["magic"] == "PE32"),
             "major_linker_version": optional_header["major_linker_version"],
             "minor_linker_version": optional_header["minor_linker_version"],
             "sizeof_code": optional_header["sizeof_code"],
-            "sizeof_initialized_data": optional_header[
-                "sizeof_initialized_data"
-            ],
-            "sizeof_uninitialized_data": optional_header[
-                "sizeof_uninitialized_data"
-            ],
+            "sizeof_initialized_data": optional_header["sizeof_initialized_data"],
+            "sizeof_uninitialized_data": optional_header["sizeof_uninitialized_data"],
             "addressof_entrypoint": optional_header["addressof_entrypoint"],
             "baseof_code": optional_header["baseof_code"],
             "baseof_data": optional_header["baseof_data"],
@@ -250,12 +261,8 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
             ],
             "major_image_version": optional_header["major_image_version"],
             "minor_image_version": optional_header["minor_image_version"],
-            "major_subsystem_version": optional_header[
-                "major_subsystem_version"
-            ],
-            "minor_subsystem_version": optional_header[
-                "minor_subsystem_version"
-            ],
+            "major_subsystem_version": optional_header["major_subsystem_version"],
+            "minor_subsystem_version": optional_header["minor_subsystem_version"],
             "win32_version_value": optional_header["win32_version_value"],
             "sizeof_image": optional_header["sizeof_image"],
             "sizeof_headers": optional_header["sizeof_headers"],
@@ -272,9 +279,7 @@ class OptionalHeaderFeatureExtractor(FeatureExtractor):
             ),
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "major_linker_version",
             "minor_linker_version",
@@ -359,9 +364,7 @@ class DataDirectoriesFeatureExtractor(FeatureExtractor):
             "section": section,
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = ["RVA", "size", "section"]
         post_process_funcs = {
             "RVA": lambda x: vectorize_with_feature_hasher(x, 50),
@@ -390,9 +393,7 @@ class SectionsFeatureExtractor(FeatureExtractor):
         sections: Optional[List[dict]], record_name: str
     ) -> Optional[List[Tuple[str, int]]]:
         if sections:
-            return [
-                (section["name"], section[record_name]) for section in sections
-            ]
+            return [(section["name"], section[record_name]) for section in sections]
         else:
             return None
 
@@ -440,7 +441,8 @@ class SectionsFeatureExtractor(FeatureExtractor):
         }
         if self.ver >= 2022:
             encoded_data["Out of range"] = 0
-
+        if self.ver >= 2024:
+            encoded_data["UNKNOWN"] = 0
         if sections:
             for section in sections:
                 for characteristic in section["characteristics"]:
@@ -493,9 +495,7 @@ class SectionsFeatureExtractor(FeatureExtractor):
             "types": self.vectorize_types(sections),
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "pointerto_relocation",
             "pointerto_line_numbers",
@@ -506,18 +506,10 @@ class SectionsFeatureExtractor(FeatureExtractor):
             "types",
         ]
         post_process_funcs = {
-            "pointerto_relocation": lambda x: vectorize_with_feature_hasher(
-                x, 50
-            ),
-            "pointerto_line_numbers": lambda x: vectorize_with_feature_hasher(
-                x, 50
-            ),
-            "numberof_relocations": lambda x: vectorize_with_feature_hasher(
-                x, 50
-            ),
-            "numberof_line_numbers": lambda x: vectorize_with_feature_hasher(
-                x, 50
-            ),
+            "pointerto_relocation": lambda x: vectorize_with_feature_hasher(x, 50),
+            "pointerto_line_numbers": lambda x: vectorize_with_feature_hasher(x, 50),
+            "numberof_relocations": lambda x: vectorize_with_feature_hasher(x, 50),
+            "numberof_line_numbers": lambda x: vectorize_with_feature_hasher(x, 50),
             "entropy": lambda x: vectorize_with_feature_hasher(x, 50),
             "characteristics": lambda x: list(x.values()),
             "types": lambda x: list(x.values()),
@@ -574,6 +566,30 @@ class RelocationsFeatureExtractor(FeatureExtractor):
             buckets.pop("MIPS_JMPADDR16 | IA64_IMM64")
             buckets["MIPS_JMPADDR16 | IA64_DIR64"] = 0
 
+        if self.ver >= 2024:
+            buckets = {
+                "UNKNOWN": 0,
+                "ABS": 0,
+                "HIGH": 0,
+                "LOW": 0,
+                "HIGHLOW": 0,
+                "HIGHADJ": 0,
+                "MIPS_JMPADDR": 0,
+                "ARM_MOV32A": 0,
+                "ARM_MOV32": 0,
+                "RISCV_HI20": 0,
+                "SECTION": 0,
+                "REL": 0,
+                "ARM_MOV32T": 0,
+                "THUMB_MOV32": 0,
+                "RISCV_LOW12I": 0,
+                "RISCV_LOW12S": 0,
+                "MIPS_JMPADDR16": 0,
+                "IA64_IMM64": 0,
+                "DIR64": 0,
+                "HIGH3ADJ": 0,
+            }
+
         if flattend_entries:
             for _, type_ in flattend_entries:
                 buckets[type_] += 1
@@ -585,13 +601,9 @@ class RelocationsFeatureExtractor(FeatureExtractor):
             if self.feature_name in raw_json.keys()
             else None
         )
-        return {
-            "flattened_entries": self.flatten_relocation_entries(relocations)
-        }
+        return {"flattened_entries": self.flatten_relocation_entries(relocations)}
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = ["flattened_entries"]
         post_process_funcs = {
             "flattened_entries": lambda x: self.count_relocation_types(x),
@@ -685,18 +697,12 @@ class TlsFeatureExtractor(FeatureExtractor):
             "addressof_index": tls["addressof_index"],
             "addressof_callbacks": tls["addressof_callbacks"],
             "sizoeof_zero_fill": tls["sizeof_zero_fill"],
-            "characteristics": self.characteristics_to_onehot(
-                tls["characteristics"]
-            ),
-            "data_directory": self.data_directory_to_onehot(
-                tls["data_directory"]
-            ),
+            "characteristics": self.characteristics_to_onehot(tls["characteristics"]),
+            "data_directory": self.data_directory_to_onehot(tls["data_directory"]),
             "section": tls["section"],
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "callbacks",
             "addressof_raw_data",
@@ -787,9 +793,7 @@ class ExportFeatureExtractor(FeatureExtractor):
             **self.extract_raw_features_from_entries(entries, export_apis),
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         selected_features = [
             "export_flags",
             "timestamp",
@@ -853,9 +857,7 @@ class ImportsFeatureExtractor(FeatureExtractor):
         imports: Optional[List[dict]], record_name: str
     ) -> Optional[List[Tuple[str, int]]]:
         if imports:
-            return [
-                (import_["name"], import_[record_name]) for import_ in imports
-            ]
+            return [(import_["name"], import_[record_name]) for import_ in imports]
         else:
             return None
 
@@ -913,12 +915,8 @@ class ImportsFeatureExtractor(FeatureExtractor):
         return {
             "dll_names": self.flatten_dll_entries(imports),
             "api_names": self.flatten_api_entries(imports),
-            "forwarder_chain": self.pair_with_import_dlls(
-                imports, "forwarder_chain"
-            ),
-            "timedatestamp": self.pair_with_import_dlls(
-                imports, "timedatestamp"
-            ),
+            "forwarder_chain": self.pair_with_import_dlls(imports, "forwarder_chain"),
+            "timedatestamp": self.pair_with_import_dlls(imports, "timedatestamp"),
             "import_address_table_rva": self.pair_with_import_dlls(
                 imports, "import_address_table_rva"
             ),
@@ -927,9 +925,7 @@ class ImportsFeatureExtractor(FeatureExtractor):
             "hint": self.pair_with_import_apis(imports, "hint"),
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "dll_names",
             "api_names",
@@ -945,9 +941,7 @@ class ImportsFeatureExtractor(FeatureExtractor):
             "api_names": lambda x: vectorize_with_feature_hasher(x, 500),
             "forwarder_chain": lambda x: vectorize_with_feature_hasher(x, 100),
             "timedatestamp": lambda x: vectorize_with_feature_hasher(x, 100),
-            "import_address_table_rva": lambda x: vectorize_with_feature_hasher(
-                x, 100
-            ),
+            "import_address_table_rva": lambda x: vectorize_with_feature_hasher(x, 100),
             "iat_address": lambda x: vectorize_with_feature_hasher(x, 100),
             "data": lambda x: vectorize_with_feature_hasher(x, 100),
             "hint": lambda x: vectorize_with_feature_hasher(x, 100),
@@ -972,9 +966,7 @@ class ResourcesTreeFeatureExtractor(FeatureExtractor):
         super(FeatureExtractor, self).__init__()
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        resources_tree = make_defaultdict_from_dict_elem(
-            raw_json, self.feature_name
-        )
+        resources_tree = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
         return {
             "characteristics": resources_tree["characteristics"],
             "major_version": resources_tree["major_version"],
@@ -1090,9 +1082,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
         }
 
     @staticmethod
-    def extract_raw_features_from_version(
-        version: DefaultDict[str, Any]
-    ) -> dict:
+    def extract_raw_features_from_version(version: DefaultDict[str, Any]) -> dict:
         prefix = "version"
         return {
             f"{prefix}_type": version["type"],
@@ -1107,15 +1097,9 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
         cprefix = "fixed_file_info"
         return {
             f"{prefix}_{cprefix}_signature": fixed_file_info["signature"],
-            f"{prefix}_{cprefix}_struct_version": fixed_file_info[
-                "struct_version"
-            ],
-            f"{prefix}_{cprefix}_file_version_MS": fixed_file_info[
-                "file_version_MS"
-            ],
-            f"{prefix}_{cprefix}_file_version_LS": fixed_file_info[
-                "file_version_LS"
-            ],
+            f"{prefix}_{cprefix}_struct_version": fixed_file_info["struct_version"],
+            f"{prefix}_{cprefix}_file_version_MS": fixed_file_info["file_version_MS"],
+            f"{prefix}_{cprefix}_file_version_LS": fixed_file_info["file_version_LS"],
             f"{prefix}_{cprefix}_file_flags_mask": self.fixed_version_file_flags_to_onehot(  # noqa: E501
                 fixed_file_info["file_flags_mask"]
             ),
@@ -1146,9 +1130,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
 
         return {
             f"{prefix}_{cprefix}_type": string_file_info["type"],
-            f"{prefix}_{cprefix}_key": int(
-                string_file_info["key"] == "StringFileInfo"
-            ),
+            f"{prefix}_{cprefix}_key": int(string_file_info["key"] == "StringFileInfo"),
         }
 
     def extract_raw_features_from_var_file_info(
@@ -1159,17 +1141,13 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
 
         return {
             f"{prefix}_{cprefix}_type": var_file_info["type"],
-            f"{prefix}_{cprefix}_key": int(
-                var_file_info["key"] == "VarFileInfo"
-            ),
+            f"{prefix}_{cprefix}_key": int(var_file_info["key"] == "VarFileInfo"),
             # f"{prefix}_{cprefix}_translations":
             #       self.translations_to_featurevector(var_file_info["translations"])
         }
 
     def extract_raw_features(self, raw_json: dict) -> dict:
-        resources_manager = make_defaultdict_from_dict_elem(
-            raw_json, self.feature_name
-        )
+        resources_manager = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
         version = make_defaultdict_from_dict_elem(resources_manager, "version")
         raw_features = {
             # NOTE: extracted but not converted to feature vector
@@ -1199,14 +1177,10 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             )
             raw_features["has_icons"] = "icons" in resources_manager.keys()
             raw_features["has_dialogs"] = "dialogs" in resources_manager.keys()
-            raw_features["has_accelerator"] = (
-                "accelerator" in resources_manager.keys()
-            )
+            raw_features["has_accelerator"] = "accelerator" in resources_manager.keys()
         return raw_features
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "version_type",
             "version_key",
@@ -1234,9 +1208,7 @@ class ResourcesManagerFeatureExtractor(FeatureExtractor):
             features_selected.append("has_dialogs")
             features_selected.append("has_accelerator")
         post_process_funcs = {
-            "version_fixed_file_info_file_flags_mask": lambda x: list(
-                x.values()
-            ),
+            "version_fixed_file_info_file_flags_mask": lambda x: list(x.values()),
             "version_fixed_file_info_file_flags": lambda x: list(x.values()),
             "version_fixed_file_info_file_os": lambda x: list(x.values()),
             "version_fixed_file_info_file_type": lambda x: list(x.values()),
@@ -1304,12 +1276,8 @@ class SignatureFeatureExtractor(FeatureExtractor):
 
     def extract_raw_features(self, raw_json: dict) -> dict:
         if self.ver == 2020:
-            signature = make_defaultdict_from_dict_elem(
-                raw_json, self.feature_name
-            )
-            signer_info = make_defaultdict_from_dict_elem(
-                signature, "signer_info"
-            )
+            signature = make_defaultdict_from_dict_elem(raw_json, self.feature_name)
+            signer_info = make_defaultdict_from_dict_elem(signature, "signer_info")
             return {
                 "version": signature["version"],
                 # NOTE: extracted but not converted to feature vector
@@ -1339,9 +1307,7 @@ class SignatureFeatureExtractor(FeatureExtractor):
         else:
             raise NotSupported(self.ver, self.__class__.__name__)
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         if self.ver == 2020:
             features_selected = ["version"]
             return vectorize_selected_features(
@@ -1456,16 +1422,12 @@ class SymbolsFeatureExtractor(FeatureExtractor):
             "numberof_aux_symbols": self.pair_with_symbol_name(
                 symbols, "numberof_aux_symbols"
             ),
-            "section_number": self.pair_with_symbol_name(
-                symbols, "section_number"
-            ),
+            "section_number": self.pair_with_symbol_name(symbols, "section_number"),
             "size": self.pair_with_symbol_name(symbols, "size"),
             "value": self.pair_with_symbol_name(symbols, "value"),
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "base_type",
             "complex_type",
@@ -1479,9 +1441,7 @@ class SymbolsFeatureExtractor(FeatureExtractor):
             "base_type": lambda x: list(x.values()),
             "complex_type": lambda x: list(x.values()),
             "storage_class": lambda x: list(x.values()),
-            "numberof_aux_symbols": lambda x: vectorize_with_feature_hasher(
-                x, 50
-            ),
+            "numberof_aux_symbols": lambda x: vectorize_with_feature_hasher(x, 50),
             "section_number": lambda x: vectorize_with_feature_hasher(x, 50),
             "size": lambda x: vectorize_with_feature_hasher(x, 50),
             "value": lambda x: vectorize_with_feature_hasher(x, 50),
@@ -1509,20 +1469,39 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
         super(FeatureExtractor, self).__init__()
 
     @staticmethod
-    def version_to_onehot(ver: Optional[str]) -> Dict[str, int]:
+    def version_to_onehot(ver: int, version: Optional[str]) -> Dict[str, int]:
+        if ver < 2024:
+            return make_onehot_from_str_keys(
+                [
+                    "UNKNOWN",
+                    "SEH",
+                    "WIN_8_1",
+                    "WIN10_0_9879",
+                    "WIN10_0_14286",
+                    "WIN10_0_14383",
+                    "WIN10_0_14901",
+                    "WIN10_0_15002",
+                    "WIN10_0_16237",
+                ],
+                version,
+            )
         return make_onehot_from_str_keys(
             [
                 "UNKNOWN",
                 "SEH",
                 "WIN_8_1",
-                "WIN10_0_9879",
-                "WIN10_0_14286",
-                "WIN10_0_14383",
-                "WIN10_0_14901",
-                "WIN10_0_15002",
-                "WIN10_0_16237",
+                "WIN_10_0_9879",
+                "WIN_10_0_14286",
+                "WIN_10_0_14383",
+                "WIN_10_0_14901",
+                "WIN_10_0_15002",
+                "WIN_10_0_16237",
+                "WIN_10_0_18362",
+                "WIN_10_0_19534",
+                "WIN_10_0_MSVC_2019",
+                "WIN_10_0_MSVC_2019_16",
             ],
-            ver,
+            version,
         )
 
     @staticmethod
@@ -1551,7 +1530,7 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
         )
 
         return {
-            "version": self.version_to_onehot(load_configuration["version"]),
+            "version": self.version_to_onehot(self.ver, load_configuration["version"]),
             "characteristics": load_configuration["characteristics"],
             "timedatestamp": load_configuration["timedatestamp"],
             "major_version": load_configuration["major_version"],
@@ -1568,15 +1547,9 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
                 "decommit_total_free_threshold"
             ],
             "lock_prefix_table": load_configuration["lock_prefix_table"],
-            "maximum_allocation_size": load_configuration[
-                "maximum_allocation_size"
-            ],
-            "virtual_memory_threshold": load_configuration[
-                "virtual_memory_threshold"
-            ],
-            "process_affinity_mask": load_configuration[
-                "process_affinity_mask"
-            ],
+            "maximum_allocation_size": load_configuration["maximum_allocation_size"],
+            "virtual_memory_threshold": load_configuration["virtual_memory_threshold"],
+            "process_affinity_mask": load_configuration["process_affinity_mask"],
             "process_heap_flags": self.process_heap_flags_to_onehot(
                 load_configuration["process_heap_flags"]
             ),
@@ -1591,17 +1564,11 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
             "guard_cf_dispatch_function_pointer": load_configuration[
                 "guard_cf_dispatch_function_pointer"
             ],
-            "guard_cf_function_table": load_configuration[
-                "guard_cf_function_table"
-            ],
-            "guard_cf_function_count": load_configuration[
-                "guard_cf_function_count"
-            ],
+            "guard_cf_function_table": load_configuration["guard_cf_function_table"],
+            "guard_cf_function_count": load_configuration["guard_cf_function_count"],
             "guard_flags": load_configuration["guard_flags"],
             **self.extract_raw_features_from_code_integrity(
-                make_defaultdict_from_dict_elem(
-                    load_configuration, "code_integrity"
-                )
+                make_defaultdict_from_dict_elem(load_configuration, "code_integrity")
             ),
             "guard_address_taken_iat_entry_table": load_configuration[
                 "guard_address_taken_iat_entry_table"
@@ -1618,12 +1585,8 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
             "dynamic_value_reloc_table": load_configuration[
                 "dynamic_value_reloc_table"
             ],
-            "hybrid_metadata_pointer": load_configuration[
-                "hybrid_metadata_pointer"
-            ],
-            "guard_rf_failure_routine": load_configuration[
-                "guard_rf_failure_routine"
-            ],
+            "hybrid_metadata_pointer": load_configuration["hybrid_metadata_pointer"],
+            "guard_rf_failure_routine": load_configuration["guard_rf_failure_routine"],
             "guard_rf_failure_routine_function_pointer": load_configuration[
                 "guard_rf_failure_routine_function_pointer"
             ],
@@ -1637,18 +1600,12 @@ class LoadConfigurationFeatureExtractor(FeatureExtractor):
             "guard_rf_verify_stackpointer_function_pointer": load_configuration[
                 "guard_rf_verify_stackpointer_function_pointer"
             ],
-            "hotpatch_table_offset": load_configuration[
-                "hotpatch_table_offset"
-            ],
+            "hotpatch_table_offset": load_configuration["hotpatch_table_offset"],
             "reserved3": load_configuration["reserved3"],
-            "addressof_unicode_string": load_configuration[
-                "addressof_unicode_string"
-            ],
+            "addressof_unicode_string": load_configuration["addressof_unicode_string"],
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [
             "version",
             "characteristics",
@@ -1746,9 +1703,7 @@ class LiefFeatureExtractor(FeatureExtractor):
         raw_features["virtual_size"] = raw_json["virtual_size"]
         return raw_features
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         columns: List[str] = ["entrypoint", "virtual_size"]
         vectors: List[np.ndarray] = [
             raw_features["entrypoint"],

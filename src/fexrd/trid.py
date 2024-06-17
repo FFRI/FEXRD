@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 from typing import List, Tuple
 
@@ -23,14 +23,11 @@ class TridFeatureExtractor(FeatureExtractor):
     def extract_raw_features(self, raw_json: dict) -> dict:
         return {
             "trid_entries": [
-                (key, float(value[:-1]) / 100.0)
-                for key, value in raw_json.items()
+                (key, float(value[:-1]) / 100.0) for key, value in raw_json.items()
             ]
         }
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = ["trid_entries"]
         post_process_funcs = {
             "trid_entries": lambda x: vectorize_with_feature_hasher(x, 20),

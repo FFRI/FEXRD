@@ -1,6 +1,6 @@
 # Why FEXRD?
 
-FFRI Dataset is a dataset that can be used for a wide variety of research by containing each tool's raw output (e.g., lief, TrID, and peHash). An example in the FFRI Dataset 2020 is shown below. It is formatted as JSON, and its keys correspond to the names of the tools, and its values correspond to the tool's raw outputs.
+The FFRI Dataset contains a wide variety of tools' raw outputs (e.g., lief, TrID, peHash), making it versatile for different research applications. Below is an example from the FFRI Dataset 2020, formatted as JSON. In this format, keys represent tool names, and values represent the tools' raw outputs:
 
 ```json
 {
@@ -40,6 +40,6 @@ FFRI Dataset is a dataset that can be used for a wide variety of research by con
 }
 ```
 
-For machine learning research, we need to convert the data into fixed-dimensional vectors. Since the JSON data is heavily nested, you might be annoyed by too high-dimensional vectors if you just flatten the data.
+For machine learning research, it is necessary to transform this data into fixed-dimensional vectors. Given that the JSON structure is heavily nested, simply flattening the data could lead to excessively high-dimensional vectors, which might be cumbersome.
 
-FEXRD makes it easy for you to obtain fixed-dimensional vectors suitable for machine learning research from the FFRI Dataset.
+FEXRD provides a straightforward solution for deriving fixed-dimensional vectors from the FFRI Dataset, tailored for machine learning research.

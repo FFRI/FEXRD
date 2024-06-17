@@ -34,6 +34,5 @@ class NotSupported(FexrdBaseException):
 
     def __str__(self) -> str:
         return (
-            f"{self.cls_name} is not supported for FFRI Dataset version"
-            f" v{self.ver}"
+            f"{self.cls_name} is not supported for FFRI Dataset version" f" v{self.ver}"
         )

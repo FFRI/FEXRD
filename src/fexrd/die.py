@@ -32,22 +32,16 @@ class DieFeatureExtractor(FeatureExtractor):
         elif self.ver == 2022 or self.ver == 2023:
             if "values" in raw_json["detects"][0].keys():
                 return {
-                    "detects": [
-                        i["string"] for i in raw_json["detects"][0]["values"]
-                    ]
+                    "detects": [i["string"] for i in raw_json["detects"][0]["values"]]
                 }
             else:
                 return {"detects": []}
         else:
             raise NotImplementedError
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = ["detects"]
-        post_process_funcs = {
-            "detects": lambda x: vectorize_with_feature_hasher(x, 50)
-        }
+        post_process_funcs = {"detects": lambda x: vectorize_with_feature_hasher(x, 50)}
         return vectorize_selected_features(
             raw_features,
             features_selected,

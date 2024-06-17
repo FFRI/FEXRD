@@ -19,9 +19,7 @@ def _main() -> None:
     with open("template.in", "r") as fin:
         script_template = fin.read()
 
-    test_script = script_template.replace(
-        "FeatureExtractor", feature_extractor_name
-    )
+    test_script = script_template.replace("FeatureExtractor", feature_extractor_name)
 
     with open(output_fname, "w") as fout:
         fout.write(test_script)

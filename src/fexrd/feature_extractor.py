@@ -18,9 +18,7 @@ class FeatureExtractor:
     def extract_raw_features(self, raw_json: dict) -> dict:
         return raw_json[self.feature_name]
 
-    def vectorize_features(
-        self, raw_features: dict
-    ) -> Tuple[List[str], np.ndarray]:
+    def vectorize_features(self, raw_features: dict) -> Tuple[List[str], np.ndarray]:
         features_selected = [k for k in raw_features.keys()]
         return vectorize_selected_features(
             raw_features, features_selected, {}, self.feature_name

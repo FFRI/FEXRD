@@ -1,8 +1,6 @@
 # Welcome to FEXRD
 
-Feature EXtractor for FFRI Dataset (FEXRD) makes it easier for you to preprocess the FFRI Dataset.
-
-This document explains the motivation, basic usage and advanced usage of FEXRD.
+The Feature EXtractor for FFRI Dataset (FEXRD) simplifies the preprocessing of the FFRI Dataset. This document outlines the motivation behind FEXRD, and provides guidance on both basic and advanced usage.
 
 ## For Users
 

@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 from statistics import mean
 from typing import List, Tuple
@@ -26,11 +26,7 @@ class StringsFeatureExtractor(FeatureExtractor):
             # each code is subtracted by 0x20 to fit the range of bins in
             # [0x0, 0x7e - 0x20]
             char_counts = np.bincount(
-                [
-                    ord(c) - 0x20
-                    for c in "".join(strings)
-                    if 0x20 <= ord(c) < 0x7F
-                ],
+                [ord(c) - 0x20 for c in "".join(strings) if 0x20 <= ord(c) < 0x7F],
                 minlength=95,
             )
         else:

@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 
 import sys
@@ -18,10 +18,11 @@ class ManalyzeDetectionReason(Enum):
     W_AND_X = 1
     FEW_IMPORTS = 2
     KNOWN_PACKER_SECTION_NAME = 3
-    BROKEN_RITCH_HEADER = 4
+    BROKEN_RICH_HEADER = 4
     BROKEN_RESOURCE = 5
     HIGH_ENTROPY = 6
     POSSIBLY_PACKED = 7
+    TAMPERED_HEADER = 8
 
     @staticmethod
     def has_high_entropy_section(msg: str) -> bool:
@@ -54,13 +55,16 @@ class ManalyzeDetectionReason(Enum):
     @staticmethod
     def has_broken_rich_header(msg: str) -> bool:
         return ("The RICH header checksum is invalid." in msg) or (
-            "The number of imports reported in the RICH header is inconsistent."
-            in msg
+            "The number of imports reported in the RICH header is inconsistent." in msg
         )
 
     @staticmethod
     def has_broken_resource(msg: str) -> bool:
         return "The PE's resources are bigger than it is." in msg
+
+    @staticmethod
+    def has_tampered_header(msg: str) -> bool:
+        return "The file headers were tampered with." in msg
 
     @staticmethod
     def msg_to_enum(msg: str) -> Optional["ManalyzeDetectionReason"]:
@@ -75,11 +79,13 @@ class ManalyzeDetectionReason(Enum):
         elif ManalyzeDetectionReason.has_broken_resource(msg):
             return ManalyzeDetectionReason.BROKEN_RESOURCE
         elif ManalyzeDetectionReason.has_broken_rich_header(msg):
-            return ManalyzeDetectionReason.BROKEN_RITCH_HEADER
+            return ManalyzeDetectionReason.BROKEN_RICH_HEADER
         elif ManalyzeDetectionReason.has_high_entropy_section(msg):
             return ManalyzeDetectionReason.HIGH_ENTROPY
         elif ManalyzeDetectionReason.determined_possibly_packed(msg):
             return ManalyzeDetectionReason.POSSIBLY_PACKED
+        elif ManalyzeDetectionReason.has_tampered_header(msg):
+            return ManalyzeDetectionReason.TAMPERED_HEADER
         else:
             return None
 
@@ -94,9 +100,21 @@ class ManalyzeFeatureExtractor(FeatureExtractor):
             raise NotSupported(self.ver, self.__class__.__name__)
 
     def extract_raw_features(self, raw_json: dict) -> Dict[str, Dict[str, int]]:
-        plugin_output_categories = {
-            str(i): 0 for i in list(ManalyzeDetectionReason)
-        }
+        if self.ver < 2024:
+            plugin_output_categories = {}
+            for i in list(ManalyzeDetectionReason):
+                if i == ManalyzeDetectionReason.TAMPERED_HEADER:
+                    continue
+                if i == ManalyzeDetectionReason.BROKEN_RICH_HEADER:
+                    plugin_output_categories[
+                        "ManalyzeDetectionReason.BROKEN_RITCH_HEADER"
+                    ] = 0
+                else:
+                    plugin_output_categories[str(i)] = 0
+        else:
+            plugin_output_categories = {
+                str(i): 0 for i in list(ManalyzeDetectionReason)
+            }
         if raw_json is not None:
             for v in raw_json["plugin_output"].values():
                 category = ManalyzeDetectionReason.msg_to_enum(v)
@@ -108,17 +126,12 @@ class ManalyzeFeatureExtractor(FeatureExtractor):
                         file=sys.stderr,
                     )
             if "summary" in raw_json.keys():
-                category = ManalyzeDetectionReason.msg_to_enum(
-                    raw_json["summary"]
-                )
+                category = ManalyzeDetectionReason.msg_to_enum(raw_json["summary"])
                 if category is not None:
                     plugin_output_categories[str(category)] = 1
                 else:
                     print(
-                        (
-                            "Unknown Manalyze summary output"
-                            f" ({raw_json['summary']})"
-                        ),
+                        ("Unknown Manalyze summary output" f" ({raw_json['summary']})"),
                         file=sys.stderr,
                     )
         return {"manalyze_output": plugin_output_categories}

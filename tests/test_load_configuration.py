@@ -36,21 +36,19 @@ def test_get_features(test_json: str, datadir: Path) -> None:
     if feature_extractor is None:
         return
 
-    ref_data: str = str(
-        datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv"
-    )
+    ref_data: str = str(datadir / f"{os.path.splitext(test_json)[0]}_ref_feature.csv")
     with open(ref_data, "r") as fin:
         reader = csv.reader(fin)
         columns_ref: List[str] = next(reader)
-        feature_vector_ref = np.array(
-            [float(i) if i else np.nan for i in next(reader)]
-        )
+        feature_vector_ref = np.array([float(i) if i else np.nan for i in next(reader)])
 
     with open(str(datadir / test_json), "r") as fin:
         obj = json.loads(fin.read())
     columns, feature_vector = feature_extractor.get_features(obj["lief"])
 
     assert columns == columns_ref
+    print(feature_vector)
+    print(feature_vector_ref)
     np.testing.assert_allclose(feature_vector, feature_vector_ref)
 
 
@@ -61,9 +59,7 @@ def test_extract_raw_features(test_json: str, datadir: Path) -> None:
     if feature_extractor is None:
         return
 
-    ref_data: str = str(
-        datadir / f"{os.path.splitext(test_json)[0]}_ref_raw.txt"
-    )
+    ref_data: str = str(datadir / f"{os.path.splitext(test_json)[0]}_ref_raw.txt")
     with open(ref_data, "r") as fin:
         obj_ref = json.loads(fin.read())
 

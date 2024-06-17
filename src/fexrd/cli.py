@@ -74,10 +74,7 @@ def feature_name_to_extractor(
     }
 
     fes = [
-        ext(ver_str)
-        for v, exts in extractors_dict.items()
-        if v <= ver
-        for ext in exts
+        ext(ver_str) for v, exts in extractors_dict.items() if v <= ver for ext in exts
     ]
 
     return {fe.feature_name: fe for fe in fes}

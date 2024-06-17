@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 
 from collections import defaultdict
@@ -49,6 +49,18 @@ def make_onehot_dict_from_bitflag(
     return encoded_data
 
 
+def make_onehot_dict_from_bitflag_for_characteristics_to_onehot_2023(
+    keys: List[str], bitflag: Optional[int], flag_enum_class: Any
+) -> Dict[str, int]:
+    encoded_data = {key: 0 for key in keys}
+    if bitflag:
+        for k in encoded_data.keys():
+            k2 = "NEED_32BIT_MACHINE" if k == "CHARA_32BIT_MACHINE" else k
+            if bitflag & int(getattr(flag_enum_class, k2)) != 0:
+                encoded_data[k] = 1
+    return encoded_data
+
+
 def vectorize_with_feature_hasher(
     list_: Optional[List[Union[str, Tuple[str, Union[float, int]]]]], dim: int
 ) -> np.ndarray:
@@ -59,11 +71,7 @@ def vectorize_with_feature_hasher(
         input_type = "string"
     else:
         input_type = "pair"
-    return (
-        FeatureHasher(dim, input_type=input_type)
-        .transform([list_])
-        .toarray()[0]
-    )
+    return FeatureHasher(dim, input_type=input_type).transform([list_]).toarray()[0]
 
 
 def make_vector_column_for_array(name: str, dim: int) -> List[str]:
@@ -74,9 +82,7 @@ def make_vector_column_for_dict(name: str, dict_: dict) -> List[str]:
     return [f"{name}.{k}" for k in dict_.keys()]
 
 
-def stack_columns(
-    prefix: str, columns: List[Union[str, List[str]]]
-) -> List[str]:
+def stack_columns(prefix: str, columns: List[Union[str, List[str]]]) -> List[str]:
     result = list()
     for c in columns:
         if isinstance(c, str):
@@ -99,9 +105,7 @@ def vectorize_selected_features(
         for f in features_selected
     ]
 
-    def make_column(
-        f: str, v: Union[Sized, Dict, float, int]
-    ) -> Union[str, List[str]]:
+    def make_column(f: str, v: Union[Sized, Dict, float, int]) -> Union[str, List[str]]:
         if not isinstance(v, Sized):
             return f
         if isinstance(raw_features[f], Dict):
