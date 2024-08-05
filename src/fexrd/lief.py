@@ -625,36 +625,59 @@ class TlsFeatureExtractor(FeatureExtractor):
 
     @staticmethod
     def characteristics_to_onehot(
+        ver: int,
         characteristics: Optional[int],
     ) -> Dict[str, int]:
         if characteristics:
             characteristics_str: Optional[str] = str(
-                lief.PE.SECTION_CHARACTERISTICS(characteristics & 0xF00000)
+                lief.PE.Section.CHARACTERISTICS(characteristics & 0xF00000)
             )
             has_extra_bits = int((characteristics & 0xFF0FFFFF) != 0)
         else:
             characteristics_str = None
             has_extra_bits = 0
-        encoded_data = make_onehot_from_str_keys(
-            [
-                "SECTION_CHARACTERISTICS.ALIGN_1BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_2BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_4BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_8BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_16BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_32BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_64BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_128BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_256BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_512BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_1024BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_2048BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_4096BYTES",
-                "SECTION_CHARACTERISTICS.ALIGN_8192BYTES",
-                "SECTION_CHARACTERISTICS.???",
-            ],
-            characteristics_str,
-        )
+        if ver < 2024:
+            encoded_data = make_onehot_from_str_keys(
+                [
+                    "SECTION_CHARACTERISTICS.ALIGN_1BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_2BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_4BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_8BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_16BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_32BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_64BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_128BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_256BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_512BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_1024BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_2048BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_4096BYTES",
+                    "SECTION_CHARACTERISTICS.ALIGN_8192BYTES",
+                    "SECTION_CHARACTERISTICS.???",
+                ],
+                characteristics_str,
+            )
+        else:
+            encoded_data = make_onehot_from_str_keys(
+                [
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_1BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_2BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_4BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_8BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_16BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_32BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_64BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_128BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_256BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_512BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_1024BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_2048BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_4096BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.ALIGN_8192BYTES",
+                    "lief._lief.PE.CHARACTERISTICS.???",
+                ],
+                characteristics_str,
+            )
         encoded_data["has_extra_bits"] = has_extra_bits
         return encoded_data
 
@@ -697,7 +720,9 @@ class TlsFeatureExtractor(FeatureExtractor):
             "addressof_index": tls["addressof_index"],
             "addressof_callbacks": tls["addressof_callbacks"],
             "sizoeof_zero_fill": tls["sizeof_zero_fill"],
-            "characteristics": self.characteristics_to_onehot(tls["characteristics"]),
+            "characteristics": self.characteristics_to_onehot(
+                self.ver, tls["characteristics"]
+            ),
             "data_directory": self.data_directory_to_onehot(tls["data_directory"]),
             "section": tls["section"],
         }

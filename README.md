@@ -16,7 +16,7 @@ Install
 You can install FEXRD as follows. We recommend that you create a virtual environment before the following instructions.
 
 ```
-$ pip install https://github.com/FFRI/FEXRD/releases/download/v2024.1/fexrd-2024.1-py3-none-any.whl
+$ pip install https://github.com/FFRI/FEXRD/releases/download/v2024.2/fexrd-2024.2-py3-none-any.whl
 ```
 
 Alternatively, you can build from source code as follows.

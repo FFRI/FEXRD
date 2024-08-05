@@ -1,5 +1,5 @@
 #
-# (c) FFRI Security, Inc., 2020-2023 / Author: FFRI Security, Inc.
+# (c) FFRI Security, Inc., 2020-2024 / Author: FFRI Security, Inc.
 #
 import glob
 import json
@@ -55,7 +55,7 @@ def get_available_feature_names(ver: str) -> List[str]:
         "symbols",
         "dummy",
     ]
-    if get_ver_number(ver) < 2021:
+    if get_ver_number(ver) >= 2021:
         feature_names.append("die")
         feature_names.append("manalyze_plugin_packer")
 

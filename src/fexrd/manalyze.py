@@ -23,6 +23,7 @@ class ManalyzeDetectionReason(Enum):
     HIGH_ENTROPY = 6
     POSSIBLY_PACKED = 7
     TAMPERED_HEADER = 8
+    NSIS_INSTALLER = 9
 
     @staticmethod
     def has_high_entropy_section(msg: str) -> bool:
@@ -30,7 +31,9 @@ class ManalyzeDetectionReason(Enum):
 
     @staticmethod
     def determined_possibly_packed(msg: str) -> bool:
-        return "The PE is possibly packed" in msg
+        return ("The PE is possibly packed" in msg) or (
+            "The PE is packed or was manually edited." in msg
+        )
 
     @staticmethod
     def has_unusual_section_name(msg: str) -> bool:
@@ -67,6 +70,10 @@ class ManalyzeDetectionReason(Enum):
         return "The file headers were tampered with." in msg
 
     @staticmethod
+    def is_nsis_installer(msg: str) -> bool:
+        return "The PE is an NSIS installer" in msg
+
+    @staticmethod
     def msg_to_enum(msg: str) -> Optional["ManalyzeDetectionReason"]:
         if ManalyzeDetectionReason.has_unusual_section_name(msg):
             return ManalyzeDetectionReason.UNUSUAL_SECTION_NAME
@@ -86,6 +93,8 @@ class ManalyzeDetectionReason(Enum):
             return ManalyzeDetectionReason.POSSIBLY_PACKED
         elif ManalyzeDetectionReason.has_tampered_header(msg):
             return ManalyzeDetectionReason.TAMPERED_HEADER
+        elif ManalyzeDetectionReason.is_nsis_installer(msg):
+            return ManalyzeDetectionReason.NSIS_INSTALLER
         else:
             return None
 
@@ -104,6 +113,8 @@ class ManalyzeFeatureExtractor(FeatureExtractor):
             plugin_output_categories = {}
             for i in list(ManalyzeDetectionReason):
                 if i == ManalyzeDetectionReason.TAMPERED_HEADER:
+                    continue
+                if i == ManalyzeDetectionReason.NSIS_INSTALLER:
                     continue
                 if i == ManalyzeDetectionReason.BROKEN_RICH_HEADER:
                     plugin_output_categories[

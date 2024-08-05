@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fexrd"
-version = "v2024.1"
+version = "v2024.2"
 description = "Feature EXtractor for FFRI Dataset"
 license = "Apache-2.0"
 readme = "README.md"
